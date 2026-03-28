@@ -1,0 +1,39 @@
+Plan ------------
+1. one days array and one arrays with cost of ticket for a 1 day, 7 day, and 30 days.
+2. On a day either take a one day, one week or one month pass, if you take a one days, just move to the next index,
+on a week ticket move to the date + 7 index, and on a month pass move to the next date + 30 index.
+3. Using recursion, each index has 3 options, we're using binary lower bound to find the +7 or +30 index value.
+
+$$ a better solution would be to take a array with index representing the number and the values stores the index of that
+ value in the day array, which would give us a O(1) time to get the value.
+
+ ----CODE--------
+
+class Solution {
+public:
+    
+    int solve(int idx, vector<int>&days, vector<int>&costs, vector<int>&dp){
+        if(idx > days.size()-1){
+            return 0;
+        }
+
+        if(dp[idx] != -1) return dp[idx];
+
+        int oneday = costs[0] + solve(idx+1, days, costs,dp);
+        int idx_seven = lower_bound(days.begin(), days.end(), days[idx]+7) - days.begin();
+        int idx_thirty = lower_bound(days.begin(), days.end(), days[idx]+30) - days.begin();
+
+        int sevenday = costs[1] + solve(idx_seven, days, costs, dp);
+        int thirtyday = costs[2] + solve(idx_thirty, days, costs, dp);
+
+        return dp[idx] = min(oneday, min(sevenday, thirtyday));
+
+    }
+
+    int mincostTickets(vector<int>& days, vector<int>& costs){
+        int n = days.size();
+        vector<int> dp(n, -1);
+        int ans = solve(0, days, costs, dp);
+        return ans;
+    }
+};

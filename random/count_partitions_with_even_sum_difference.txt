@@ -1,0 +1,16 @@
+Plan-------------
+1. Not a dp or any other solution, simple maths
+2. Plan is to return how many times can you partition the array into two half to have even halfs sum have a even difference.
+3. Simple outlook -> if total sum is odd, even difference partition is not possible, but if its even we can have n-1 paritions.\
+
+
+class Solution {
+public:
+    int countPartitions(vector<int>& nums) {
+        int sum = 0;
+        int n = nums.size();
+        for(auto i: nums) sum+=i;
+        if(sum%2!=0) return 0;
+        else return (n-1);
+    }
+};

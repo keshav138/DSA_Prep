@@ -1,0 +1,48 @@
+Simply generate the inorder vector for tree , left -> top -> right, then check if its in ascending order or not.
+Check simultaneously the order as we call them.
+
+----CODE----------
+
+bool inorder(TreeNode* root, int&prev){
+    if(root==nullptr) return true;
+
+    if(inorder(root->left, prev) == false){
+        return false;
+    }
+
+    if(root->data <= prev) return false;
+
+    prev = root->data;
+
+    return inorder(root->right, prev);
+
+}
+
+
+bool isBst(TreeNode* root){
+    long long prev = LLONG_MIN;
+    return inorder(root , prev);
+}
+
+
+-------------------------OR-----------
+class Solution {
+public:
+    vector<int>help;
+    vector<int>helper(TreeNode* root){
+        if(root==nullptr) return {};
+        helper(root->left);
+        help.push_back(root->val);
+        helper(root->right);
+        return help;
+    }
+
+
+    bool isValidBST(TreeNode* root) {
+        vector<int>ans = helper(root);
+        for(int i=0;i<ans.size()-1;i++){
+            if(ans[i]>=ans[i+1]) return false;
+        }
+        return true;
+    }
+};

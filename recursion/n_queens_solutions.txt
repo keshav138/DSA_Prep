@@ -1,0 +1,39 @@
+
+## simple - calculate number of possible solutions, same as NQueens I, only change is the recursion statement: 
+
+class Solution {
+public:
+
+    int solve(int col, int n, vector<int>&leftRow, vector<int>&upperDiagonal, vector<int>&lowerDiagonal){
+        if(col > n-1){
+            return 1;
+        }
+
+        int totalAns = 0;
+        for(int row=0; row<n; row++){
+            if(leftRow[row] == 0 && lowerDiagonal[col+row] == 0 && upperDiagonal[n - 1 + col - row] == 0){
+
+                leftRow[row] = 1;
+                lowerDiagonal[col+row] = 1;
+                upperDiagonal[n - 1 + col - row] = 1;
+
+                totalAns += solve(col+1, n, leftRow, upperDiagonal, lowerDiagonal);
+
+                leftRow[row] = 0;
+                lowerDiagonal[col+row] = 0;
+                upperDiagonal[n - 1 + col - row] = 0;
+            }
+        }
+
+        return totalAns;
+    }
+
+    int totalNQueens(int n) {
+        vector<int> leftRow(n, 0);
+        vector<int> upperDiagonal(2 * n - 1, 0);
+        vector<int> lowerDiagonal(2 * n - 1, 0);
+        
+        int answer = solve(0, n, leftRow, upperDiagonal, lowerDiagonal);
+        return answer;
+    }
+};

@@ -1,0 +1,29 @@
+
+https://www.youtube.com/watch?v=_-QHfMDde90&t=703s
+watch the working , not simple
+
+----CODE---------
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // Base Case: If we hit null, or we find p or q, return the current node
+        if (root == nullptr || root == p || root == q) {
+            return root;
+        }
+
+        // Look for p and q in the left and right subtrees
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+
+        // --- Post-Order Logic (Decision Making) ---
+
+        // If both sides returned something, this node is the LCA (The "Split")
+        if (left != nullptr && right != nullptr) {
+            return root;
+        }
+
+        // If only one side returned something, pass that result up (The "One-Sided")
+        return (left != nullptr) ? left : right;
+    }
+};

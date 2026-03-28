@@ -1,0 +1,23 @@
+Fomat for writing bfs on a adjacency matrix;
+
+void bfs(int startNode, int V, vector<vector<int>>& matrix) {
+    vector<bool> visited(V, false);
+    queue<int> q;
+
+    visited[startNode] = true;
+    q.push(startNode);
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        cout << u << " ";
+
+        // Scan the entire row u to find neighbors
+        for (int v = 0; v < V; v++) {
+            if (matrix[u][v] == 1 && !visited[v]) {
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+}

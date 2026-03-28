@@ -1,0 +1,24 @@
+Plan
+1. Simple, subsequences problem, using the pick and not pick method, and memoize it later. Only condition applied to pick and not pick is to not
+pick adjacent elements.
+
+CODE-----------------------
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        vector<int>memo(n, -1);
+        return solve(n-1,nums, memo);      
+    }
+
+    int solve(int idx, vector<int>&nums, vector<int>&memo){
+        if(idx == 0) return nums[0];
+        if(idx < 0) return 0;
+        if(memo[idx]!=-1) return memo[idx];
+    
+        int pick = nums[idx] + solve(idx-2, nums, memo);
+        int notPick = solve(idx-1, nums, memo);
+
+        return memo[idx] = max(pick, notPick);
+    }
+};

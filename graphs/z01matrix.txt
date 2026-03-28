@@ -1,0 +1,53 @@
+Plan ----------
+
+1. Given a 0 1 based matrix, return a rxc matrix, where every 0 is replaced with the distance at which the closest 1 lies
+2. We do a multisource bfs from all the 1's present in the matrix, we use a standard bfs, with a queue with a pair of 
+index and a step variable, everytime we push into the queue we do a +1, therefore from the point we're starting out, 
+we start with 0(since the source is a 1 , so the closest 1 is the 1 itself), then as we move on to 0's we keep adding 1's 
+to the step
+
+
+
+------CODE----------
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int r = mat.size();
+        int c = mat[0].size();
+
+        vector<vector<int>> dist(r, vector<int>(c, 0));
+        vector<vector<int>> vis(r, vector<int>(c, 0));
+        queue<pair<pair<int,int>, int>> q;
+
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                if(mat[i][j] == 0){
+                    q.push({{i,j}, 0});
+                    vis[i][j] = 1;
+                }
+            }
+        }
+
+        int dr[] = {0, -1, 0, 1};
+        int dc[] = {-1, 0, 1, 0};
+
+        while(!q.empty()){
+            int row = q.front().first.first;
+            int col = q.front().first.second;
+            int steps = q.front().second;
+            q.pop();
+            dist[row][col] = steps;
+
+            for(int i=0; i<4; i++){
+                int nrow = row + dr[i];
+                int ncol = col + dc[i];
+
+                if(nrow >= 0 && nrow < r && ncol >= 0 && ncol < c && !vis[nrow][ncol]){
+                    q.push({{nrow, ncol}, steps+1});
+                    vis[nrow][ncol] = 1;
+                }
+            }
+        }
+        return dist;
+    }
+};

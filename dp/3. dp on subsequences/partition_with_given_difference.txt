@@ -1,0 +1,46 @@
+Plan -----------------------
+1. Question asks to count no of ways to partition array into two subsets such that the difference between them equal to a difference
+2. This is the subset target sum, with a little bit of maths.
+
+total_sum = s1 + s2
+
+s1 - s2 = given Difference
+
+Substitute: 
+    to get, total_sum = s1 + s1 - givenDiff
+    which gives us: s1 = total_sum + givenDiff / 2; , we have all the values, therefore we have a target to look for.
+
+Our base cases, total_sum - givenDiff must be +ve and the division must result in a whole number.
+
+---------CODE-----------
+class Solution {
+  public:
+    int countPartitions(vector<int>& arr, int diff) {
+        // Code here
+        int total_sum = 0;
+        int n = arr.size();
+        
+        for(auto it: arr) total_sum += it;
+        
+        if( total_sum - diff < 0 || (total_sum - diff) % 2 != 0 ) return 0; // base case condition
+        int target = (total_sum - diff) / 2;
+        
+        vector<vector<int>>dp(n, vector<int>(target+1, -1));
+        return solve(n-1, arr, target, dp);
+    }
+    
+    int solve(int idx, vector<int>&arr, int target, vector<vector<int>>&dp){
+        if(idx < 0){
+            if(target == 0) return 1;
+            else return 0;
+        }
+        
+        if(dp[idx][target]!=-1) return dp[idx][target];
+        
+        int notPick = solve(idx-1, arr, target, dp);
+        int pick = 0;
+        if(arr[idx] <= target) pick = solve(idx-1, arr, target - arr[idx], dp);
+        
+        return dp[idx][target] = notPick + pick;
+    }
+};

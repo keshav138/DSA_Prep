@@ -1,0 +1,35 @@
+
+void helper(vector<int>&arr, vector<int>&current, vector<vector<int>>&answer, unordered_map<int,int>&map){
+    if(current.size() == arr.size()){
+        answer.push_back(current);
+        return;
+    }
+
+    for(auto &pair : map){  ## point to note, we're iterating over unique values of the array, so think [1,2,1], here if we take a 2 first, we dont
+                            ## have two choices, we only have one choice , which is 1, who has a count 2;
+        int num = pair.first;
+        int count = pair.second;
+
+        if(count > 0){
+            current.push_back(num);
+            map[num]--;
+            helper(arr, current, answer, map);
+            current.pop_back();
+            map[num]--;
+        }
+    }
+}
+
+vector<vector<int>> permuteDuplicates(vector<int>&nums){
+    vector<int>current;
+    vector<vector<int>> answer;
+    unordered_map<int, int>map;
+
+    for(auto i: nums){
+        map[i]++;
+    }
+
+    helper(nums, current, answer, map);
+    return answer;
+}
+

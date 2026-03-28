@@ -1,0 +1,50 @@
+These graphs are 2-colorable, meaning no two adjacent nodes share the same color. Linear graphs are always bipartite.
+Any graph with an even cycle length can be bipartite.
+An odd cycle length graph is not bipartite. A graph is bipartite if and only if it does not contain any odd-length cycles.
+
+APPROACH---------
+1. Standard BFS approach, starting node give a colour, then as we search for adjacent elements, we colour them opposite to the sources colour.
+2. If at any point, our adjacent node has the same colour as our source node, means our graph is not a bipartite graph.
+3. We use the for loop structure to account for connected graphs.
+
+-----CODE----------
+class Solution {
+
+private:
+    bool check(int start, int V, vector<vector<int>>& graph, vector<int>&vis){
+        
+        queue<int>q;
+        q.push(start);
+        vis[start] = 0;
+
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+
+            for(auto i : graph[node]){
+                if(vis[i] == -1){
+                    vis[i] = !vis[node];
+                    q.push(i);
+                }
+                else if(vis[i] ==  vis[node]) return false;
+            }
+        }
+
+        return true;
+    }
+
+
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        int V = graph.size();
+        vector<int>vis(V, -1);
+
+        for(int i=0; i<V; i++){
+            if(vis[i]==-1){
+                if(check(i, V, graph, vis) == false) return false;
+            }
+        }
+
+        return true;
+    }            
+};

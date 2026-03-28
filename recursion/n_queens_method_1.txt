@@ -1,0 +1,78 @@
+Plan: 
+# might look difficult as fck if im coming back, but its simple, read
+
+1. Iterate columns, for each confirm first(ie with another method) if queen can be placed,  yes then,
+2. Update queen location on the chessboard, recurse to next column, remove the queen again for backtracking.
+3. For function, we check back-upper-diagonal, all left values, and back-lower-diagonal, return true and false accordingly
+4. Function doesnt need to calculate rest , because every col has only 1 valid value so, up and down are invalid, nothing's on the right, all that's
+is the left.
+
+** better solution is to hash the diagonals and left row, for better time complexity
+
+
+------------------CODE--------------------
+bool isSafe(int row, int col, vector<string>board, int n){
+    int dum_row = row;
+    int dum_col = col;
+
+    // to check the left values 
+
+    while(dum_col >= 0){
+        if(board[dum_row][dum_col] == 'Q') return false;
+        dum_col--;
+    }
+
+    // to check upper diagonal
+
+    dum_row = row;
+    dum_col = col;
+
+    while(dum_row>=0 && dum_col>=0){
+        if(board[dum_row][dum_col] == 'Q') return false;
+        dum_col--;
+        dum_row--;
+    }
+
+    // to check lower diagonal
+
+    dum_row = row;
+    dum_col = col;
+
+    while(dum_row<n && dum_col>=0){
+        if(board[dum_row][dum_col] == 'Q') return false;
+        row++;
+        col--;
+    }
+
+    return true;
+}
+
+
+
+void solve(int col, vector<string>&board, vector<vector<string>>&answer, int n){
+    if(col > n){
+        answer.push_back(board);
+        return;
+    }
+
+    for(int row=0; row<n; row++){
+        if(isSafe(row, col, board, n)){
+            board[row][col] = 'Q';
+            solve(col+1, board, answer, n);
+            board[row][col] = '.';
+        }
+    }
+}
+
+vector<vector<string>> solveNQueens(int n){
+    vector<vector<string>> answer;
+    vector<string> board(n);
+    string s(n, '.');
+
+    for(int i=0; i<n; i++){
+        board[i] = s;
+    }
+
+    solve(0, board, answer, n);
+    return answer;
+}

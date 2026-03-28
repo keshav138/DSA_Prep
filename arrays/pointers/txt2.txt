@@ -1,0 +1,166 @@
+
+# 🎯 HTML/CSS/JS with bolt.new - Prompts
+
+## Initial Setup Prompt
+
+```
+Create a simple HTML/CSS/JS project with Tailwind CDN.
+
+Structure:
+- index.html (landing page)
+- login.html
+- register.html  
+- dashboard.html
+- taskboard.html
+- js/api.js (all API calls to http://localhost:8000/api)
+- js/auth.js (token management)
+
+Use Tailwind CDN, Inter font, no build step.
+Color scheme: blue (#3B82F6) primary, purple (#8B5CF6) accent.
+Clean, minimal design.
+
+Include navigation bar component in dashboard/taskboard with logout button.
+```
+
+---
+
+## Page 1: Landing Page Prompt
+
+```
+Create index.html landing page:
+
+Hero section with gradient background (blue to purple).
+Heading: "Manage Projects, Deliver Results"
+Subheading: "Collaborate with your team in real-time"
+Two buttons: "Get Started" (links to register.html), "Login" (links to login.html)
+
+Center content, modern design, Tailwind CSS via CDN.
+```
+
+---
+
+## Page 2: Login Prompt
+
+```
+Create login.html:
+
+Centered card on gray background.
+"TaskMaster" heading in blue.
+Two inputs: username, password.
+Submit button calls API: POST /api/auth/login/
+On success: save token to localStorage, redirect to dashboard.html
+On error: show red error message.
+Link to register.html below form.
+
+Include js/api.js and js/auth.js scripts.
+Use fetch API.
+```
+
+---
+
+## Page 3: Register Prompt
+
+```
+Create register.html:
+
+Centered card, similar to login.
+Fields: username, email, password, password2, first_name, last_name.
+Submit calls: POST /api/auth/register/
+On success: save tokens, redirect to dashboard.html
+Validate passwords match before submit.
+Link to login.html.
+
+Use Tailwind, fetch API.
+```
+
+---
+
+## Page 4: Dashboard Prompt
+
+```
+Create dashboard.html:
+
+Top navbar: "TaskMaster" logo, username, logout button.
+Main content: "My Projects" heading.
+Grid of project cards (3 columns).
+Each card shows: project name, description, task count, team size.
+"+ New Project" button opens modal.
+
+Modal form: project_name, description, submit creates project via POST /api/projects/
+
+Fetch projects on load: GET /api/projects/
+Click card opens taskboard.html?project_id=X
+
+Protected: check token in localStorage, redirect to login if missing.
+```
+
+---
+
+## Page 5: Task Board Prompt
+
+```
+Create taskboard.html:
+
+Top navbar with back button to dashboard.
+Project name as page title.
+Four columns: TODO, IN_PROGRESS, IN_REVIEW, DONE.
+Each column has task cards with: title, priority badge, assignee name, due date.
+"+ Add Task" button in each column.
+
+Create task modal: title, description, priority, assigned_to (dropdown of team members), due_date.
+Click task card shows detail modal with: all info, comments section, change status buttons.
+
+API calls:
+- GET /api/tasks/?project={id}
+- POST /api/tasks/
+- POST /api/tasks/{id}/change_status/
+- GET /api/tasks/{id}/comments/
+- POST /api/tasks/{id}/comments/
+
+Get project_id from URL params.
+```
+
+---
+
+## js/api.js Prompt
+
+```
+Create js/api.js:
+
+const API_BASE = 'http://localhost:8000/api';
+
+Functions:
+- getToken() - get from localStorage
+- apiCall(endpoint, options) - wrapper with auth header
+- auth.login(username, password)
+- auth.register(data)
+- auth.logout()
+- projects.list()
+- projects.create(data)
+- projects.get(id)
+- tasks.list(filters)
+- tasks.create(data)
+- tasks.changeStatus(id, status)
+- tasks.getComments(id)
+- tasks.addComment(id, text)
+
+Return promises, handle errors.
+```
+
+---
+
+## js/auth.js Prompt
+
+```
+Create js/auth.js:
+
+Functions:
+- saveTokens(access, refresh)
+- getAccessToken()
+- clearTokens()
+- isAuthenticated() - check if token exists
+- redirectIfNotAuth() - redirect to login.html if no token
+- logout() - clear tokens, redirect to login
+
+Export all functions.
+```

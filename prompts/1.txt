@@ -1,0 +1,17 @@
+
+1. First problem, about removing members from projects, we'll change from put/patch the details of the user, instead use the api endpoint, POST /api/auth/{id}/remove_member/
+        BODY : {'user_id' : 5}
+, earlier the logic for team members tasks was not implemented that resulted in their tasks being left in the projects with their assignments.
+
+2. There is a specific logic for tasks moving between status's, what the api is code like is :allowed_transition = {
+            'TODO' : ['IN_PROGRESS'],
+            'IN_PROGRESS' : ['IN_REVIEW', 'TODO'],
+            'IN_REVIEW' : ['DONE', 'IN_PROGRESS'],
+            'DONE' : ['IN_PROGRESS'] ## allowing reopening tasks
+        } 
+        
+but as of right now our kanban and the task pane allows us to switch to any, which then send an error from the front end, for invalid choices, we need to not allow draggin to that area, and no show the invalid options to the user.
+
+3. We need to implement the done tasks div, we could show it just like the todo tasks div, but though a button next to kanban, like it loads a div, removing the todo in progress and in review for the time being.
+
+4. Finally run me through the implementation for the notifications thing we left out earlier.

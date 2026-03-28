@@ -1,0 +1,31 @@
+Plan---------------
+
+1. We need to go down on one node and its adjacency nodes, therefore we use recursion.
+2. Initializations we need are a visited array, a path list, and a start node.
+3. The function marks each node as visited, pushes it into the path, and iterates on its adjacency list nodes, if not visited, calls the func onit.
+
+
+-------------CODE---------------
+class Solution {
+  private:
+    void dfs(int node, vector<vector<int>>&adj, int vis[], vector<int>&list){
+            vis[node] = 1;
+            list.push_back(node);
+            
+            for(auto i : adj[node]){
+                if(!vis[i]){
+                    dfs(i, adj, vis, list);
+                }
+            }
+    }
+    
+  public:
+    vector<int> dfs(vector<vector<int>>& adj) {
+        // Code here
+        int vis[adj.size()] = {0};
+        int start = 0; 
+        vector<int>list;
+        dfs(start, adj, vis, list);
+        return list;
+    }
+};

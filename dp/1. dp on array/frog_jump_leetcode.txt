@@ -1,0 +1,54 @@
+Plan----
+1.Pretty straightforward but a little tricky, frog needs to jump till the last stone which is the value at the last index,
+stones array contains location of stones. 
+2.First jump distance must be 1, after that a frog can jump k-1, k, or k+1. But must always land on a stone position present on the stone array.
+3. Unlike earlier climbing stairs, here we need to keep track of index and stones positions.
+
+Soln ---
+1. DP part is pretty simple, lets tackle the recursion first.
+2. End case is if we reach the final index, so our base case is idx == stones.size()-1;
+3. Then we must perform the three actions , k-1, k and k+1.
+4. We loop from k-1 to k+1.
+5. Also we'll only make calls where a in jumping a stone exists. So like stones[idx]+(k-1 or k or k+1). To make this check easier we use a 
+unorered map, where each stone and its index is present.
+6. Inside our loop, we only do the actions when our i is > 0, this also tackles the first case, since the values we iterate over are 
+-1(invalid), 0(invalid), 1(valid, what we want). Once we get one the rest take cares of it byself.
+7. First we check if a stone exists for that iteration through the map, if yes, we call the function with the with the current jumpStep we took
+and the index of the stone.
+
+For applying dp, we have to use a structure like (index, jump_we_took_to_get_here) = true/false, we do a check before the loop, and add a 
+value declaration inside the loop if its true, and a declaration for false at the end of teh funciton.
+
+----------CODE---------------
+
+class Solution {
+public:
+    bool canCross(vector<int>& stones) {
+        unordered_map<int, int> map;
+        for(int i=0; i<stones.size(); i++){
+            map[stones[i]] = i;
+        }
+
+        unordered_map<int , unordered_map<int,bool>> memo;
+        
+        return solve(0, 0, stones, map, memo);
+    }
+
+    bool solve(int idx, int k, vector<int>&stones, unordered_map<int, int>&map, unordered_map<int, unordered_map<int, bool>>&memo){
+        if(idx == stones.size()-1) return true;
+
+        if(memo.count(idx) && memo[idx].count(k)) return memo[idx][k];
+        // first call , k-1, check if value is greater than 0
+        
+        for(int nextJump=k-1; nextJump<=k+1; nextJump++){
+            if(nextJump>0){
+                int targetStoneVal = stones[idx]+nextJump;
+                if(map.count(targetStoneVal)){
+                    if(solve(map[targetStoneVal], nextJump, stones, map, memo)) return memo[idx][k] = true;
+                }
+            }
+        }
+
+        return memo[idx][k] = false;
+    }
+};

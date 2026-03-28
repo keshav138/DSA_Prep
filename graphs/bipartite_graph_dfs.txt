@@ -1,0 +1,48 @@
+Bipartite Graphs : Bipartite graphs are graphs whose vertices can be divided into two disjoint sets such that every edge connects a vertex in one set to a vertex in the other set. This property ensures that no two vertices within the same set are adjacent.
+
+Basically, if we were to assign two colors to nodes in a bipartite graph, we can color all nodes in one set with one color and all nodes in the other set with another color. This is because no two adjacent nodes can have the same color.
+
+This is the adjacecy list approach----
+@here we're given a edge list that we convert to a adjacency list.
+----CODE------
+
+class Solution {
+  public:
+  
+    bool dfs(int node, int col, vector<vector<int>>&adj, vector<int>&color){
+        color[node] = col;
+        
+        for(auto i: adj[node]){
+            if(color[i] == -1){
+                if(dfs(i, !col, adj, color) == false)  return false;
+            }
+            else if(color[i] == col) return false;
+        }
+        
+        return true;
+    }
+  
+    bool isBipartite(int V, vector<vector<int>> &edges) {
+        // Code here
+        vector<vector<int>> adj(V);
+        for(const auto& edge: edges){
+            int u = edge[0];
+            int v = edge[1];
+            
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        
+        
+        vector<int>color(V, -1);
+        // cout<<adj.size()<<" "<< color.size();
+        
+        for(int i=0; i<V; i++){
+            if(color[i] == -1){
+                if(dfs(i, 0, adj, color) == false) return false;
+            }
+        }
+        
+        return true;
+    }
+};

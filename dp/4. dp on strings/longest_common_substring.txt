@@ -1,0 +1,36 @@
+Plan---------
+1. This is a simple play on the standard lcs soution.
+2. Since we're calculating the substring, we cant exempt any index, otherwise we would violate the contigious property, so we only have one condition where we check if the string characters are same, if yes we move add the values.
+3. We can use the same dp array as the lcs solution, but we need to modify the base case and the recurrence relation.
+
+@ inner for loop has only one condition.
+@@ if im coming back ever, look at the striver soulution matrix video for this for clarity, the prereq for this is the lcs and printing lcs.
+@@@ also follows tabulation here.
+
+Leetcode 718 is a valid problem. There we're using a number array instead of a string , but same solution works
+
+-------CODE-----------
+class Solution {
+public:
+    int findLength(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        int m = nums2.size();
+
+        vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+
+        for(int i=0; i<=n; i++) dp[i][0] = 0;
+        for(int i=0; i<=m; i++) dp[0][i] = 0;
+
+        int ans = 0;
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=m; j++){
+                if(nums1[i-1] == nums2[j-1]){
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                    ans = max(ans, dp[i][j]);
+                }
+            }
+        }
+
+        return ans;
+    }
+};

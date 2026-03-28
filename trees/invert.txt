@@ -1,0 +1,21 @@
+Inverting a binary tree using bfs
+
+-----CODE----------\
+
+
+TreeNode* invertTree(TreeNode* root){
+    if(root == nullptr) return root;
+    queue<TreeNode*> q;
+    q.push(root);
+
+    while(!q.empty()){
+        TreeNode* temp = q.top();
+        q.pop();
+
+        swap(temp->left, temp->right);
+        if(temp->left) q.push(temp->left);
+        if(temp->right) q.push(temp->right);
+    }
+
+    return root;
+}

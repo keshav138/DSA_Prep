@@ -1,0 +1,68 @@
+Plan- 
+
+- Given a rat at the beginning, and a matrix of nxn with obstacles reach the end
+- simple each step has 4 condition to check, up down left right
+- if any step is valid enter, else recurse back (ofcourse with additional checks)
+
+function structure
+1. check one, if we've reached the end node, therefore push answer to finalds
+2. create a array for all directions for row and col and a char array for up down left right
+3. loop through the array, calculate the nextR and nextC, then a series of checks
+3.1 check if nextR and nextC lie inside the matrix, if the box is visited or not, if the box is an obstacle, if not continue
+3.2 mark visited array as visited, function call to next box, recurse, backtrack and mark the box as unvisited again.(add path character as per loop)
+
+-------------CODE----------------
+-->Checks
+- first lots of function parameters, ensure those
+- direction and character must be aligned
+- for loop must only run 4 time for 4 directions
+- the checks inside, remember 0 is for blocked answer
+- mark the current row and col as visited not the next nextC and nextR
+
+
+
+class Solution {
+  public:
+    vector<string> ratInMaze(vector<vector<int>>& maze) {
+        // code here
+        vector<string> answer;
+        string current = "";
+        
+        int n = maze.size();
+        vector<vector<bool>> visited(n, vector<bool>(n, false));
+        
+        findPath(0, 0, n, maze, current, answer, visited);
+        return answer;
+    }
+    
+    void findPath(int row, int col, int n, vector<vector<int>>&maze, string current, vector<string>&answer,
+    vector<vector<bool>>&visited){
+        if(row == n-1 && col == n-1){
+            answer.push_back(current);
+            return;
+        }
+        
+        int dr[] = {1, 0, 0, -1};
+        int dc[] = {0, -1, 1, 0};
+        
+        char dir[] = {'D', 'L', 'R', 'U'};
+        
+        for(int i=0; i<4; i++){
+            
+            int nextR = row + dr[i];
+            int nextC = col + dc[i];
+            
+            if(nextR >= 0 && nextR <= n-1 && nextC >= 0 && nextC <= n-1 
+                && maze[nextR][nextC]!=0 && visited[nextR][nextC] == false
+            ){
+                visited[row][col] = true;
+                current.push_back(dir[i]);
+                findPath(nextR, nextC, n, maze, current, answer, visited);
+                current.pop_back();
+                visited[row][col] = false;
+            }
+            else continue;
+            
+        }
+    }
+};

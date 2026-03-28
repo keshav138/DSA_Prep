@@ -1,0 +1,22 @@
+
+Basically every node must follow this law of having max depth difference between left and right branch no more than 1, 
+therefore we find left most first , then right most, check for difference if all good, send it up to the top with a +1 to consider itself as well.
+-----CODE-----------
+
+int helper(TreeNode* root){
+    if(root == nullptr) return 0;
+
+    int l = helper(root->left);
+    int r = helper(root->right);
+
+    if(l == -1 || r == -1 || abs(l-r) > 1) return -1;
+
+    return max(l, r) + 1;
+}
+
+
+
+
+bool isBalanced(TreeNode* root){
+    return helper(root) > 0;
+}

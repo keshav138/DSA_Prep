@@ -1,0 +1,49 @@
+
+Plan-------------------------
+1. We're given a adjacency list and we're asked to find out how many provinces are there, basically islands of connected nodes or node.
+2. So we use a simple approach , we use a visited array and dfs.
+3. Once we declare a visited array, we run a loop through it, if the visited index is 0, we run a dfs through it as we send the visited along it.
+4. When it runs the dfs, it marks all its connected nodes as 1, therefore when the next loop iteration runs through it, it will simply skip it.
+5. The number of times the dfs is called, is the number of seperate islands we have.
+
+
+--------------CODE-------------
+class Solution {
+private:
+
+    void dfs(int node, vector<vector<int>>&arr, vector<int>&vis){
+        vis[node] = 1;
+
+        for(auto i: arr[node]){
+            if(!vis[i]){
+                dfs(i, arr, vis);
+            }
+        }
+    }
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n = isConnected.size();
+        vector<vector<int>> arr(n+1);
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(isConnected[i][j] && i != j){
+                    arr[i+1].push_back(j+1);
+                    arr[j+1].push_back(i+1);
+                }
+            }
+        }
+
+        vector<int>vis(n+1, 0);
+        
+        int count = 0;
+        for(int i=1; i<=n; i++){
+            if(!vis[i]){
+                dfs(i, arr, vis);
+                count++;
+            }
+        }
+
+        return count;
+    }
+};

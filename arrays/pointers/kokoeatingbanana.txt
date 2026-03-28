@@ -1,0 +1,34 @@
+
+class Solution{
+    public:
+
+    int minEatingSpeed(vector<int>&piles, int h){
+        int right = *max_element(piles.begin(), piles.end());
+
+        int left = 0;@
+
+        int ans = 0;
+
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+
+            long long curr_count = 0;
+
+            for(int i: piles ){
+                curr_count += ceil((double)i/mid);
+            }
+
+            if(curr_count <= h){
+                ans = mid;
+                right = mid-1;
+            }
+
+
+            else{
+                left = mid+1;
+            }
+
+        }
+        return ans;
+    }
+}

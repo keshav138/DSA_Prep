@@ -1,0 +1,45 @@
+logic behind is that the next permutation is the first finding the first break point from the end, 
+
+12345 -> first permutation -> ascending values
+54321 -> last permutation -> descending values
+
+2 1 5 4 3 0 0 -> first break point from starting from 0 is 1, since the value drops, so break point is 1
+after finding the break, we find the next largest number to 1, which is the largest number from the end, i.e 3, we swap these values
+2 3 5 4 1 0 0 -> now to get the smallest next iteration, we reverse all values from the break idx, i.e after 3, 5 4 1 0 0 -> 0 0 1 4 5
+2 3 0 0 1 4 5 -> the ans
+
+
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int idx = -1;
+        int n = nums.size();
+        // first we find the first break point
+        // first one can be n-2th element
+
+        for(int i=n-2; i>=0; i--){
+            if(nums[i] < nums[i+1]){
+                idx = i;
+                break;
+            }
+        }
+
+        // if no break point, then arry is at max permutation, we reverse and send back;
+        if(idx == -1){
+            return reverse(nums.begin(), nums.end());
+        }
+
+        // then we find the next greater element to the breakpoint idx
+
+        for(int i=n-1; i>idx; i--){
+            if(nums[i] > nums[idx]){
+                swap(nums[idx], nums[i]);
+                break;
+            }
+        }
+
+        // then we sort the remaining array from the idx onward to get the smallest permutation
+        reverse(nums.begin()+idx+1, nums.end());
+
+    }
+};

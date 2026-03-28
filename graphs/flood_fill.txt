@@ -1,0 +1,38 @@
+Plan----
+1. This is the watered down version of the number of islands, basically given a new color and a starting point, we are to take into account the 
+initial color of the starting point and all the points that are connected and have the same initial color , change all their colors to the new color.
+
+2. Simple dfs from the starting point.
+
+-----------CODE----------------------
+class Solution {
+
+private:
+    void dfs(int row, int col, vector<vector<int>>&ans, vector<vector<int>>&image, int new_color, int old_color){
+        
+        int max_row = image.size();
+        int max_col = image[0].size();
+        ans[row][col] = new_color;
+
+        int dr[] = {0, -1, 0, 1};
+        int dc[] = {-1, 0, 1, 0}; 
+
+        for(int i=0; i<4; i++){
+            int new_row = row + dr[i];
+            int new_col = col + dc[i];
+
+            if(new_row >= 0 && new_row < max_row && new_col >= 0 && new_col < max_col && image[new_row][new_col]==old_color && ans[new_row][new_col]!=new_color){
+                dfs(new_row, new_col, ans, image, new_color, old_color);
+            }
+        }
+    }
+
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int ini_col = image[sr][sc];
+        vector<vector<int>> ans = image;
+
+        dfs(sr, sc, ans, image, color, ini_col);
+        return ans;
+    }
+};

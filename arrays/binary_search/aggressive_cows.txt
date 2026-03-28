@@ -1,0 +1,51 @@
+Plan---
+1. We're to find the place m cows, between stalls, between 1 to n, and we're to place them such that the distance between two cows is maximized. As in if the gap is 3, and we're able to place 3 cows, a gap of 4 should not be possible to place all cows, maximise the minimum distance between two cows.
+
+2. We use binary search , first we sort the array, then we find the max gap between two stalls, which forms our high variable. k = stalls[n-1] - stalls[0], and our low is 1 , i.e the minimum distance between two cows which is possible.
+
+3. We find a mid, then we see if we're able to fit all cows with that gap(mid), if yes(and we save it as a potential ans), then anything below gap, (gap-1, -2,...) is possible, so we want to check for a higher number, therefore we move forward, left = mid + 1, we do this until our high and low collide.
+
+
+----CODE-------
+class Solution {
+public:
+
+    int can_we_accomodate(vector<int>&pos, int m, int gap){
+        int placed = 1;
+        int last_placed = pos[0];
+
+        for(int i=1; i<pos.size(); i++){
+            if(pos[i] - last_placed >= gap){
+                placed++;
+                last_placed = pos[i];
+            }
+        }
+
+        if(placed >= m) return true;
+        else return false;
+
+    }
+
+    int maxDistance(vector<int>& position, int m) {
+        int n = position.size();
+
+        sort(position.begin(), position.end());
+        int max_gap = position[n-1] - position[0];
+        int ans = -1;
+
+        int low = 1;
+        int high = max_gap;
+
+        while(low <= high){
+            int mid = low + (high - low)/2;
+
+            if(can_we_accomodate(position, m, mid)){
+                low = mid + 1;
+                ans = max(ans, mid);
+            }
+            else high = mid - 1;
+        }
+
+        return ans;
+    }
+};

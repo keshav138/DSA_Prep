@@ -1,0 +1,43 @@
+
+## computes all subsequences, keeps a map to see if a element has been used before
+
+void helper(vector<int>&arr, vector<vector<int>>&answer, vector<int>&current, vector<bool>&map){
+    if(arr.size() == current.size()){
+        answer.push_back(current);
+        return;
+    }
+
+    for(int i=0; i<arr.size(); i++){
+        if(map[i]) continue;
+        map[i] = true;
+        current.push_back(arr[i]);
+        helper(arr, answer, current, map);
+        current.pop_back();
+        map[i] = false;
+    }
+}
+
+## considers all possible value at a given index, shifts the index, then does the same thing recursively
+
+void helper2(int idx, vector<int>&nums, vector<vector<int>>&answer){
+    if(idx > nums.size()-1){
+        answer.push_back(nums);
+        return;
+    }
+
+    for(int i=idx; i<nums.size(); i++){
+        swap(nums[idx], nums[i]);
+        helper2(idx+1, nums, answer);
+        swap(nums[idx], nums[i]);
+    }
+}
+
+
+vector<vector<int>> permute(vector<int>&nums){
+    vector<vector<int>> answer;
+    vector<int> current;
+    vector<bool> map(nums.size(), false);
+
+    helper(nums, answer, current, map);
+    helper2(0, nums, answer);
+}

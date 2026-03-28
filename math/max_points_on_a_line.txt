@@ -1,0 +1,73 @@
+Plan------------
+1. Pretty much all math, the idea behind is for a point to lie on a line along with other points, the fix point will have the same slope with all those
+who lie on the line.
+2. So we do the same, we fix a point, and get its slope with all other points, all those that have the same slope fall in the same line.
+3. We do this for all points.
+
+Everything else is intricasies in managing the edge cases: 
+1. As we iterate, every fix point will have a local max, a map, a duplicate count.
+2. Now first condition, we skip if we encounter the same index in the inner loop, a point with itself makes no sense.
+3. If there are exact duplicates of the fixed point, we have a seperate pointer for them, and add them to the local max later.
+4. We calculate del_x and del_y.
+5. We do not divide them, due to float point errors that might arise as we save them as keys, so we use the pair of x and y, as a pair key, 
+and increment values to the slope as encountered.
+6. Cases where x and y are -1 and 2 and 1 and -2 might arise, while being the same slope, may give a different key, therefore we keep the numerator -ve only.
+7. Cases where x and y are 6/3 and 1/2 might arise, both while same, give different keys again, therefore we divide both numerataor and denom with their gcd.
+8. Last we enter them into the map counter as we encounter them, and maintain a local max and a global max , that we check after every innner loop completion.
+
+
+------------ Ideas is simple, only has a lot of edge cases------------------
+--------------CODE---------------------
+
+
+class Solution {
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        map<pair<int,int>, int> slope;
+        int local_max = 0;
+        int global_max = 0;
+        int duplicate_count = 0;
+        int n = points.size();
+
+        for(int i=0; i<n; i++){
+
+            slope.clear();
+            duplicate_count = 0;
+            local_max = 0;
+
+            for(int j=0; j<n; j++){
+                // to avoid same index comparing with itself
+                if(i == j) continue;
+                
+                // if there are duplicates
+                if(points[i][0] == points[j][0] && points[i][1] == points[j][1]){
+                    duplicate_count++;
+                    continue;
+                } 
+
+                // calculating the points x,y
+                int x = points[i][0] - points[j][0];
+                int y = points[i][1] - points[j][1];
+
+                // if denom is negative, making only the numerator -ve
+                if( x < 0){
+                    x = -x;
+                    y = -y;
+                }
+
+                // getting the fraction, to its base number -> 3/6 to 1/2
+                int hcf = gcd(x,y);
+                x = x / hcf;
+                y = y/ hcf;
+
+                // updating map, and local_max
+                slope[{x,y}]++;
+                local_max = max(local_max, slope[{x,y}]);
+            }
+
+            global_max = max(global_max, local_max + duplicate_count + 1);
+        }
+
+        return global_max;
+    }
+};

@@ -1,0 +1,55 @@
+
+Plan
+1. Basically we're only hashing the diagonals and left row to avoid using the extra function and the 3 loops
+
+i. Left Row -> simple to calculate, since each row can have only 1 Queen -> n sized
+ii. Lower Diagonal -> all row and column at each box add up to create multiple diagonals with same sum, using this concept, any matrix has a max sum of 
+2 * n - 1, create a vector for tracking
+iii. Upper Diagonal -> all row and col has a constant difference for upper digonals, for this we use a similar method as teh earlier one
+-------------------------CODE---------------------------------
+
+
+void solve(int col, vector<string>&board, vector<vector<string>>&answer, int n
+    vector<int>&leftRow, vector<int>&lowerDiagonal, vector<int>& upperDiagonal
+    ){
+    if(col > n){
+        answer.push_back(board);
+        return;
+    }
+
+    for(int row=0; row<n; row++){
+        if(leftRow[row]==0 && lowerDiagonal[row+col]==0 && upperDiagonal[n - 1 + col - row]==0){
+
+            board[row][col] = 'Q';
+            leftRow[row] = 1;
+            lowerDiagonal[row+col] = 1;
+            upperDiagonal[n - 1 + col - row] = 1;
+
+            solve(col+1, board, answer, n , leftRow, lowerDiagonal, upperDiagonal);
+
+            board[row][col] = '.';
+            leftRow[row] = 0;
+            lowerDiagonal[row+col] = 0;
+            upperDiagonal[n - 1 + col - row] = 0;
+
+        }
+    }
+}
+
+vector<vector<string>> solveNQueens(int n){
+    vector<vector<string>> answer;
+    vector<string> board(n);
+    string s(n, '.');
+
+    for(int i=0; i<n; i++){
+        board[i] = s;
+    }
+
+    vector<int> leftRow(n, 0);
+    vector<int> lowerDiagonal(2*n - 1, 0);
+    vector<int> upperDiagonal(2*n -1, 0);
+
+    solve(0, board, answer, n, leftRow, lowerDiagonal, upperDiagonal);
+    return answer;
+}
+

@@ -1,0 +1,75 @@
+Plan---
+1. There's 1 island and we're to find the perimeter of the island, basically all the invalid edges and edges with water.
+2. The idea here is, iterate from top left to bottom right, every time we get a land node , we add 4(assuming isolated);
+if then the left or up is also a land box, we subtract 2 each time. Since one edge is invaild, and it was shared with
+two boxes.
+3. Reason we only check up and left is since we're iterating left->right and top->bottom, we can check the edges
+we have already accounted for.
+
+---------CODE---------------------
+class Solution {
+public:
+    int islandPerimeter(vector<vector<int>>& grid) {
+        int row = grid.size();
+        int col = grid[0].size();
+
+        int perimeter = 0;
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                if(grid[i][j] == 1){
+                    perimeter += 4;
+                    if(i > 0 && grid[i-1][j] == 1) perimeter -= 2;
+                    if(j > 0 && grid[i][j-1] == 1) perimeter -= 2;
+                }
+            }
+        }
+        return perimeter;
+    }
+};
+
+Recursive Approach-------------------------------
+Here the dfs checks the neighbors contribution to the perimeter, the first box we send is definately a island land,
+so from there on we check its edges, unless the next box in any direction is land, you are returned a 0 or 1.
+Land cases lead to further recursion.
+
+class Solution {
+public:
+
+    int dfs(int row, int col, vector<vector<int>>&grid){
+        if(row < 0 || row >= grid.size() || col < 0 || col >= grid[0].size()){
+            return 1;
+        }
+
+        if(grid[row][col] == 0) return 1;
+
+        if(grid[row][col] == -1) return 0;
+
+        grid[row][col] = -1;
+
+        int count = 0;
+        count += dfs(row, col-1, grid);
+        count += dfs(row-1, col, grid);
+        count += dfs(row, col+1, grid);
+        count += dfs(row+1, col, grid);
+        return count;
+        
+        
+    }
+
+    int islandPerimeter(vector<vector<int>>& grid) {
+        int row = grid.size();
+        int col = grid[0].size();
+
+        int perimeter = -1;
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                if(grid[i][j] == 1){
+                    perimeter = dfs(i, j, grid);
+                    break;
+                }
+            }
+            if(perimeter != -1) break;
+        }
+        return perimeter;
+    }
+};

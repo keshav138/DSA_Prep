@@ -1,0 +1,42 @@
+Plan----------
+1. Modified version of the partition subset with given difference
+2. Since the question, combines minus and plus operation, its the same problem.
+
+
+
+-------CODE---------
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        return countPartition(nums.size(), nums, target);
+    }
+
+    int countPartition(int n , vector<int>&nums, int target){
+        int totalSum = 0;
+        for(auto i : nums) totalSum += i;
+
+        if(totalSum - target < 0 || (totalSum - target) % 2 != 0) return 0;
+
+        int tar = (totalSum - target) / 2;
+
+        vector<vector<int>> dp(n , vector<int>(tar+1, -1));
+        return solve(n-1, nums, tar, dp);
+    }
+
+    int solve(int idx, vector<int>&nums, int tar, vector<vector<int>>&dp){
+        if(idx < 0){
+            if(tar == 0) return 1;
+            return 0;
+        }
+
+        if(dp[idx][tar]!=-1) return dp[idx][tar];
+
+        int notPick = solve(idx-1, nums, tar, dp);
+        int take = 0;
+        if(nums[idx] <= tar){
+            take = solve(idx-1, nums, tar - nums[idx], dp);
+        }
+
+        return dp[idx][tar] = take + notPick;
+    }
+};

@@ -1,0 +1,80 @@
+Plan-----------
+1. Find the longest common subsequence between two strings.
+2. Idea is to use recursion to simultaneously create subsequences and check for matching characters.
+3. We carry two indexes, one for each string, if we match on a index, we add 1 and move back both one place, 
+4. If we do not match, we've got two cases, we first track both cases, one where we dont move one, and one where we dont move the other one.
+
+To avoid cases like these   ce | d  && cd | e, here d might not match with e, but either ones can match with the next element, so we consider both cases.
+@Base Case is standard -> if any index falls negative return 0.
+
+Since the memoization, sometimes fails due to memory issues, so its best to do the tabulation as well.
+
+Now conversion, from memoization to tabulation is straight forward, but here theres a twist, usually we only consider the same dp matrix, and update teh initial
+values as the base case, however here we have i<0 and j<0 is equal to 0, we cant have -ve indexes in the matrix so we shift all indexes by one.
+-1 is 0 and n-1 is n. 
+
+So we do the same,create a n+1 and m+1 matrix, update all cases where i or j are 0. Then build the loops for the two changing values i and j, both moving from 1 to n(included) & m(included). Same two cases again like memoization, if same , we do the same if not also do the same. Only place where we need to change the indexes is the text comparison part, because the idexes are shifted by 1, so we need to go from 0 to n-1 & m-1; 
+
+@@ also a dp[i][j] indicates how many valid subsequences we can get from t1[0:i] and t2[0:j].
+
+-----CODE-------------
+
+Memoization----
+
+class Solution {
+public:
+
+    int solve(int idx1, int idx2, string&t1, string&t2 , vector<vector<int>>&dp){
+        if(idx1 < 0 || idx2 < 0) return 0;
+
+        if(dp[idx1][idx2] != -1) return dp[idx1][idx2];
+
+        if(t1[idx1] == t2[idx2]) return dp[idx1][idx2] =  1 + solve(idx1-1, idx2-1, t1, t2, dp);
+
+        return dp[idx1][idx2] =  max( solve(idx1-1, idx2, t1, t2, dp), solve(idx1, idx2-1, t1, t2, dp));
+
+    }
+
+    int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.length();
+        int m = text2.length();
+
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+
+        return solve(n-1, m-1, text1, text2, dp);
+    }
+};
+
+Tabulation-----
+
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.length();
+        int m = text2.length();
+
+        vector<vector<int>>dp(n+1, vector<int>(m+1, 0));
+
+        for(int i=0;i<=m;i++){ //all 0 row entries is 0
+            dp[0][i] = 0;
+        }
+        for(int i=0; i<=n; i++){ // all 0 column entries is 0
+            dp[i][0] = 0;
+        }
+        
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=m; j++){
+                if(text1[i-1] == text2[j-1]) dp[i][j] = 1 + dp[i-1][j-1];
+
+                else{
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+                }
+
+            }
+
+        }
+
+        return dp[n][m];
+
+    }
+};

@@ -1,0 +1,43 @@
+A peak element is an element that is strictly greater than its neighbors.
+
+Given a 0-indexed integer array nums, find a peak element, 
+and return its index. If the array contains multiple peaks, return the index to any of the peaks.
+
+
+here there are some simple things to note, there can be multiple answers, but we only return one so its easy,
+simply keep looking for a greater element than mid, you'll hit a peak.
+
+the binary search changes,
+
+1) left < right, due to keeping right = mid, if left and right land on the same index, 
+mid value gets assigned to low, then again high = mid, infinite loop.When low equals high, mid would also equal low.
+The code would keep setting high = mid, and you’d be stuck in an infinite loop.
+
+2) right = mid, because if arr[mid] > arr[mid+1] we're on a decending hill, mid could still be the peak in the lower
+half, therefore no -1. 
+Incase of left, if arr[mid] < arr[mid+1], mid is surely not the peak point so we're safe.
+
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& arr) {
+        int n = arr.size();
+
+        if(n==1) return 0;
+
+        int left = 0, right = n-1;
+        int mid = 0;
+
+        while(left < right){
+            mid = left + (right - left) / 2;
+
+            if(arr[mid] > arr[mid+1]){
+                right = mid ;
+            }
+            else{
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+};

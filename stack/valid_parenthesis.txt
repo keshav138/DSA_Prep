@@ -1,0 +1,22 @@
+
+
+class Solution{
+    public:
+
+    bool isValid(string s){
+        stack<char> bracket;
+
+        for(auto ch: s){
+            if(ch=="(" || ch=="[" || ch=="{"){
+                bracket.push(ch);
+            }
+            
+            else{
+                if(bracket.empty()) return false;
+                char top = bracket.top();
+                bracket.pop();
+                if(ch==")" && top!="(" ||)
+            }
+        }
+    }
+}

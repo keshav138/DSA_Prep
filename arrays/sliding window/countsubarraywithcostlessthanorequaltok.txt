@@ -1,0 +1,49 @@
+This uses a deque to keep hold of min and max values, and sliding window to keep track of subarrays.
+
+The control is as follow: 
+1. We iterate with the right pointer from 0 to n;
+2. We check if by entering the values in the deque ,do we negate the monotonic property, if yes we pop until we can 
+push the new value.(do for both, therefore the while loop).
+3. Now the back end is safe to push, therefore we do so.
+4. Now we use a calculate cost function, the front of both deque's contain the min and max for the subarray.
+5. If our cost is greater than k, we decrease the size of teh sliding window by incrementing the left.
+6. Now that we've shortened our windows, we need to check for invalid entries inside the deque, if we find we pop.
+7. When we get a cost <= k, we push number of valid subarrays by right - left + 1.(only valid for <= condition cases)
+
+
+----------CODE---------------------------
+
+class Solution {
+public:
+
+    long long calculateCost(vector<int>&nums, int max, int min, int right, int left){
+        long long ans = (nums[max] - nums[min]) * (right - left + 1);
+        return ans;
+    }
+
+    long long countSubarrays(vector<int>& nums, long long k) {
+        
+        int left = 0;
+        int n = nums.size();
+        long long ans = 0;
+        deque<int>maxDq; // to get max, maintain a decreasing order
+        deque<int>minDq; // to get min, maintain a incresing order
+
+        for(int right=0; right<n; right++){
+            while(!maxDq.empty() && nums[maxDq.back()] < nums[right]) maxDq.pop_back();
+            while(!minDq.empty() && nums[minDq.back()] > nums[right]) minDq.pop_back();
+
+            maxDq.push_back(right);
+            minDq.push_back(right);
+
+            while(calculateCost(nums,maxDq.front(), minDq.front(), right, left) > k){
+                left++;
+                while(!maxDq.empty() && maxDq.front() < left) maxDq.pop_front();
+                while(!minDq.empty() && minDq.front() < left) minDq.pop_front();
+            }
+
+            ans += (right - left + 1);
+        }
+        return ans;
+    }
+};

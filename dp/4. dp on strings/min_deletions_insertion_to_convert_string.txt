@@ -1,0 +1,52 @@
+Plan--------
+1. Given two strings, give min operations, required to convert one string to another.
+2. Max operations is the delete entire string and insert all elements from another string to the original one.
+3. For minimum operations we look at lcs, whatevers common we dont touch, whatevers not, we delete from one and insert from another.
+4. So eg. "abcd" and "anc", the lcs is "ac" and from "abcd", we delete "bc" (n - lcs), and to convert it to "anc", we insert a "n" (m - lcs).
+5. Finally giving us: n + m - 2(lcs).
+
+---------CODE------------
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        int n = word1.length();
+        int m = word2.length();
+
+        vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=m; j++){
+                if(word1[i-1] == word2[j-1]){
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                }
+                else dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+
+        int deletion1 = n - dp[n][m];
+        int deletion2 = m - dp[n][m];
+
+        return deletion1 + deletion2;
+    }
+};
+
+---------CODE----------PYTHON
+#User function Template for python3
+class Solution:
+	def minOperations(self, s1, s2):
+		# code here
+		n = len(s1)
+		m = len(s2)
+		
+		dp = [[0]*(m+1) for _ in range(n+1)]
+		
+		for i in range(1, n+1):
+		    for j in range(1 , m+1):
+		        if s1[i-1] == s2[j-1]:
+		            dp[i][j] = 1 + dp[i-1][j-1]
+		        else:
+		            dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+		            
+		
+		return n + m - (2*dp[n][m])
+		

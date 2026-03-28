@@ -1,0 +1,57 @@
+Plan------
+1. The idea here is that, we're to return that minimum number of steps required to convert one string to to a palindrome.
+2. Now we know that the maximun insertions possible is the length of the string itself, because "aab" will be a palindrome if we just duplicate is and add it , ie "aabbaa", therefore the max insertion is the length of the string.
+3. Now we see it as such, that we maintain the max length palindrome in the string, and whatever doesnt match one the right we add it to the left and whatever doesnt match up on the left, we add to the right. 
+
+For eg. "abcaa", the longest palindrome we can make is "aba" or "aaa", for "aba", the ca on the left, doesnt match the anything on the right, therefore we need to add a "ca" on the right, giving us "aacbcaa", giving us a palindrome with 2 insertions.
+
+Now if we're able to find the longest palindrome in the string, we can simply do a n - longest length palindrome, because the difference is what we need to duplicate on whichever side its not present. And the longest palindrome can be found using the lcs, by sending the string in reverse.
+
+------------CODE----------------
+
+class Solution {
+public:
+    int minInsertions(string s) {
+        int n = s.length();
+        string r = s;
+        reverse(r.begin(), r.end());
+        int ans = solve(n, s, r);
+        cout<<ans;
+        return n - ans;
+    }
+
+    int solve(int n, string&s, string& r){
+        vector<vector<int>>dp(n+1, vector<int>(n+1, 0));
+
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=n; j++){
+                if(s[i-1] == r[j-1]){
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                }
+                else dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+
+        return dp[n][n];
+
+    }
+};
+
+
+--------CODE----PYTHON
+
+class Solution:
+    def findMinInsertions(self, s):
+        # code here
+        r = s[::-1]
+        n = len(s)
+        
+        dp = [[0]*(n+1) for _ in range(n+1)]
+        
+        for i in range(1, n+1):
+            for j in range(1, n+1):
+                if s[i-1] == r[j-1]:
+                    dp[i][j] = 1 + dp[i-1][j-1]
+                else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+        
+        return n-dp[n][n]

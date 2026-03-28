@@ -1,0 +1,58 @@
+Plan------------------
+1. Huge problem, but simpler implementation.
+2. A 2d grid, with robots at ends of either row in the top.
+3. Both must find a path down together, to pick up values in boxes, and return the maximum value.
+4. If both land on the same box, the value can be considered only once.
+
+Insight - We must carry both of them together at every recursion call, to know where they meet. So three indexes in total, the row, the col1 for 
+robo1 and col2 for robo2. The row is the same for both since at every call both must fall down.
+DP requires a 3d matrix, since we have 3 changing variables, row, col1 for robo1, and col2 for robo2.
+
+Soln-------------------------
+1. Base Case
+-> First we check for dull paths, if column values go out of bounds, either < 0 or > n-1. return a min value to null path.(-1e9)
+-> If we reach the bases case, ie last row, we need to check two things if both land on the same box or not, if yes then return the boxes value once
+else return the sum for both the columns values.
+-> DP Memo check if we have already encountered the row, col1, and col2 combo.
+
+2. Recusion
+-> Since at every position of robo 1, robo2 can have 3 possible next boxes, with one overlapping box, we have a total of 9 cases to check.
+-> So we run two for loop each going from -1 to 1, for three col positions , rdiag, bottom , ldiag. Total - 9 position
+-> One check , if they are currently at one box, the path sum must only include the box values once, and the call the function, else
+we can take both their current boxes values into the sum.
+-> We keep a max variable , where we take the max of all 9 paths.
+-> Return accordingly
+
+
+-----------------CODE---------------------
+class Solution {
+public:
+    
+    int solve(int row,int col1,int col2, int r, int c, vector<vector<int>>&grid, vector<vector<vector<int>>>&dp){
+        if(col1 < 0 || col1>c-1 || col2< 0 || col2>c-1) return -1e9;
+        if(dp[row][col1][col2] != -1) return dp[row][col1][col2];
+
+        if(row==r-1){
+            if(col1 == col2) return grid[row][col1];
+            else return grid[row][col1] + grid[row][col2];
+        }
+
+        int maxi = -1;  
+        for(int i=-1; i<=1; i++){
+            for(int j=-1; j<=1; j++){
+                int path_sum = 0;
+                if(col1 == col2) path_sum = grid[row][col1] + solve(row+1, col1+i, col2+j, r,c, grid, dp);
+                else path_sum = grid[row][col1] + grid[row][col2] + solve(row+1, col1+i, col2+j, r,c, grid, dp);
+                maxi = max(maxi, path_sum);
+            }
+        }
+        return dp[row][col1][col2] = maxi;
+    }
+
+    int cherryPickup(vector<vector<int>>& grid) {
+        int r = grid.size();
+        int c = grid[0].size();
+        vector<vector<vector<int>>> dp(r, vector<vector<int>>(c, vector<int>(c, -1) ));
+        return solve(0, 0, c-1, r, c , grid, dp);    
+    }
+};

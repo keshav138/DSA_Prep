@@ -1,0 +1,117 @@
+Plan------
+1. The overall concept is simple, we loop on the nodes, if a node is not visited we call bfs on it.
+2. In the bfs, we store the parent and the node, since for a list or matrix, there will be repetition like:
+
+1->{2,3}
+2->{1,4}
+3->{1,4}
+4->{2,3}
+
+// once iteration for 1 is complete, when 2 starts, it encounters 1, which is already visited, because it was the parent. therefore we skip 1
+// however if a node is already visited and it was not he current node's parent, there is a loop
+// explained in the above example, 4 is already visited by 2, but when 3 discovers it again, it see's that it's visited
+and its not its source/ parent node either (which for 3 here is 1), therefore there is a node. 
+
+Difference in code simply arises from being given a adjacency list, matrix or edge list.
+
+--------------CODE--------------------
+class Solution {
+    private:
+    
+    bool bfs(int source, vector<vector<int>>&edges, vector<int>&visited, int V){
+        queue<pair<int, int>> q;
+        q.push({source, -1});
+        visited[source] = 1;
+        
+        while(!q.empty()){
+            int node = q.front().first;
+            int parent = q.front().second;
+            
+            for(int i = 0; i<V; i++){
+                if(edges[node][i]==1){
+                    if(!visited[i]){
+                        visited[i] = 1;
+                        q.push({i, node});
+                    }
+                    else{
+                        if(i != parent) return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+  public:
+    bool isCycle(int V, vector<vector<int>>& edges) {
+        // Code here
+        vector<int>visited(V, 0);
+        
+        
+        for(int j=0; j<V; j++){
+            if(!visited[j]){
+                if(bfs(i, edges, visited, V) == true){
+                    return true;
+                }
+            }
+        }
+        
+        
+        return false;
+        
+    }
+};
+
+-----------CODE----------------adjacency-matrix method by converting an edge list first
+class Solution {
+    private:
+    
+    bool bfs(int source, vector<int>adj[], vector<int>&visited, int V){
+        queue<pair<int, int>> q;
+        q.push({source, -1});
+        visited[source] = 1;
+        
+        while(!q.empty()){
+            int node = q.front().first;
+            int parent = q.front().second;
+            
+            for(auto &list: adj[node]){
+                if(!visited[list]){
+                    visited[list] = 1;
+                    q.push({list, node});
+                }
+                else{
+                    if(list != parent) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    
+  public:
+    bool isCycle(int V, vector<vector<int>>& edges) {
+        // Code here
+        vector<int>visited(V, 0);
+        vector<int>adj[V];
+        
+        for(auto &edge: edges){
+            int u = edge[0];
+            int v = edge[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        
+        for(int i=0; i<V; i++){
+            if(!visited[i]){
+                if(bfs(i, adj, visited, V)==true){
+                    return true;
+                }
+            }
+        }
+        
+        
+        return false;
+        
+    }
+};

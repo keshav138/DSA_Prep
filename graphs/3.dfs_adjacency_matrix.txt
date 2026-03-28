@@ -1,0 +1,13 @@
+Format for writing dfs on a adjacency matrix
+
+void dfs(int u, int V, vector<vector<int>>& matrix, vector<bool>& visited) {
+    visited[u] = true;
+    cout << u << " ";
+
+    for (int v = 0; v < V; v++) {
+        // If there is an edge AND the neighbor hasn't been visited
+        if (matrix[u][v] == 1 && !visited[v]) {
+            dfs(v, V, matrix, visited);
+        }
+    }
+}

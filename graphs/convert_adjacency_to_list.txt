@@ -1,0 +1,12 @@
+To convert adjacency graph to a list;
+
+-----------CODE------------
+
+for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(isConnected[i][j] && i != j){ // condition to make sure if arr[i][i] = 1 , we dont add 1 to itself in the list.
+                    arr[i+1].push_back(j+1);
+                    arr[j+1].push_back(i+1);
+                }
+            }
+        }

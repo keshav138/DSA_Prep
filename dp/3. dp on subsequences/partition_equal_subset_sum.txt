@@ -1,0 +1,39 @@
+Plan-----
+1. Idea is if we can partition the array to be split into two subsets/subsequences that have the same sum.
+2. There is a simple observation here, for two subsets to have same sum, the total sum must be even, if the total sum is odd, the splitting is
+not possible, therefore for odd sums we directly return a false value.
+3. For even sums, if we're able to find a subarray with sum = total_sum/2, means the other existing half also has the 
+sum total_sum/2, where we return true.
+
+4. The second part is just the subset target sum     problem with target total_sum / 2.
+
+-------------------CODE---------------------
+class Solution {
+  public:
+  
+    bool solve(int idx, vector<int>&arr, vector<vector<int>>&dp, int target){
+        if(target==0) return true;
+        if(idx == 0) return (arr[idx]==target);
+        if(dp[idx][target] != -1) return dp[idx][target];
+        
+        bool notTake = solve(idx-1, arr, dp, target);
+        bool Take = false;
+        if(arr[idx] <= target) Take = solve(idx-1, arr, dp, target - arr[idx]);
+        
+        return dp[idx][target] = notTake | Take;
+    }
+  
+    bool equalPartition(vector<int>& arr) {
+        // code here
+        int totalSum = 0;
+        for(auto i : arr) totalSum += i;
+        
+        if( totalSum % 2 != 0) return false;
+        
+        else{
+            int target = totalSum / 2;
+            vector<vector<int>> dp(arr.size(), vector<int>(target+1, -1));
+            return solve(arr.size()-1, arr, dp, target);
+        }
+    }
+};

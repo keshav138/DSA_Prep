@@ -1,0 +1,75 @@
+
+Plan : 
+Similar to N Queens, at every blank, we iterate from 0-9, check the linear col and row if the value exist, along with the 3x3 matrix, if yes
+then we recurse to forward solutions from that point on. 
+If the solution returns to be true, we return true(since we only need one unique solution), else we remove the value with a blank;
+
+For the checking process, for linear comparison the method is straighforward, keep row const for one and col const for another.
+
+Main formula comes in finding the 3x3 that the index belongs to and if the value exists in it.
+For this we use two formula, each consisting of two parts: 
+
+index =  box they belong to + offset
+
+box they belong to is simple -> (i/3) * 3 // "i/3" gives us 0 1 2, and multiplying it gives us the box's start index, 0 3 6
+offset -> one for rows -> where the offset is i/3 , since the offset we need is 0 0 0 1 1 1 2 2 2, first row, second row, third row
+offset -> one for col -> where the offset is i%3, since the offset we need is 0 1 2 0 1 2 0 1 2, 
+
+    0   1   2
+0   1   2   3
+1   4   5   6
+2   7   8   9
+
+Above first row remains same for first 3, but col changes with +1, hence the above offset
+Use two funciton, main function calls the recursive function, and one more to help with checking if the current value is valid
+
+______________________CODE__________________________________
+
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        solve(board);
+    }
+
+    bool solve(vector<vector<char>>& board){
+        for(int row = 0; row<board.size(); row++){
+            for(int col=0; col<board[0].size(); col++){
+                if(board[row][col]=='.'){
+
+                    for(char i='1'; i<='9'; i++){
+                        if(isValid(row, col, i, board)){
+                            board[row][col] = i;
+                            if(solve(board)==true){
+                                return true;
+                            }
+                            else{
+                                board[row][col] = '.';
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    bool isValid(int row, int col, char number, vector<vector<char>>&board){
+        for(int i=0; i<9; i++){
+            // for checking horizontally, row const
+            if(board[row][i] == number) return false;
+
+            // for checking vertically , col const
+            if(board[i][col] == number) return false;
+
+            /// for 3x3 matrix
+            int startRow = (row/3)*3 + (i/3); // box index start_row + offset 
+            int startCol = (col/3)*3 + (i%3); // box index start_col + offset
+
+            if(board[startRow][startCol] == number) return false;
+
+        }
+        return true;
+    }
+
+};

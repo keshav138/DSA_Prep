@@ -1,0 +1,58 @@
+Plan--------
+1. Given a 2d matrix, we're to find the distinct islands, rotated and mirrored islands are considered different.
+2. The approach we take is to save difference of land blocks from a source block, sort of save it like a direction vector in terms of rows and columns.
+3. The structure is the same, we iterate over the grid, the first 1 we encounter we run a dfs and save its entire island cords in a vector(with row and col values), which we then save in a set, we do this for all unvisited 1's to get a set of unique islands.
+
+@@ srow, and scol is the source land we calculate the directions for teh other land blocks
+----CODe------
+
+// User function Template for C++
+
+class Solution {
+    private:
+    void dfs(int row, int col, vector<vector<int>>&grid, vector<vector<int>>&vis, vector<pair<int,int>>&vec, int srow, int scol){
+        vis[row][col] = 1;
+        
+        int r = grid.size();
+        int c = grid[0].size();
+        
+        int drow[] = {0, -1, 0, 1};
+        int dcol[] = {-1, 0, 1, 0};
+        
+        vec.push_back({row-srow, col-scol});
+        
+        for(int i=0; i<4; i++){
+            int cur_row = row + drow[i];
+            int cur_col = col + dcol[i];
+            
+            if(cur_row >= 0 && cur_row < r && cur_col >= 0 && cur_col < c && !vis[cur_row][cur_col] && grid[cur_row][cur_col]){
+                dfs(cur_row, cur_col, grid, vis, vec, srow, scol);
+            }
+        }
+    }
+
+  public:
+    int countDistinctIslands(vector<vector<int>>& grid) {
+        // code here
+        int r = grid.size();
+        int c = grid[0].size();
+        
+        // visited vector grid
+        vector<vector<int>> vis(r, vector<int>(c, 0));
+        
+        // set to store island row and col values
+        set<vector<pair<int,int>>> st; 
+        
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                if(grid[i][j]==1 && !vis[i][j]){
+                    vector<pair<int,int>> vec;
+                    dfs(i, j, grid, vis, vec, i, j);
+                    st.insert(vec);
+                }
+            }
+        }
+        
+        return st.size();
+    }
+};

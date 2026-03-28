@@ -1,0 +1,28 @@
+
+def solve(n, k, arr):
+    arr.sort()
+    median_idx = n//2
+
+    low = arr[median_idx]
+    high = arr[median_idx+k]
+
+    ans = low
+
+
+    while low <= high:
+        mid = low + (high - low) / 2
+
+        cost = 0
+
+        for i in range(median_idx, n):
+            if mid > arr[i]:
+                cost += mid - arr[i]
+            
+        
+        if cost <= k:
+            ans = mid
+            low = mid+1
+        else:
+            high = mid-1
+
+    return ans;

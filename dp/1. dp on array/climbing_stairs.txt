@@ -1,0 +1,23 @@
+Pretty straight forward, at every step can take 1 or two steps , simple recursion, simple memoization
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        vector<int>memo(n+1, -1);
+
+        return solve(n, memo);
+    }
+
+    int solve(int n, vector<int>&memo){
+        if(n==0) return 1;
+        if(n<0) return 0;
+
+        if(memo[n]!=-1) return memo[n];
+
+        int left = solve(n-1, memo);
+        int right = 0;
+        if(n>=2) right = solve(n-2, memo);
+
+        return memo[n] = left+right;
+    }
+};

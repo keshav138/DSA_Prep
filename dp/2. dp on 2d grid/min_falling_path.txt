@@ -1,0 +1,37 @@
+Plan-------------------
+1. Unlike other path problems, here there are variable starting points and variable end points, therefore we do calls for all the variable
+starting points.
+2. For each call we test the min path.
+3. Inside the function , first base is for null paths, ie if a col value goes out of bounds.
+4. Second base is for the last row, returning the answer as it is, and the third is the dp solution if it exists.
+5. The functions are as the question states , up,  right diag, and left diag.
+6. Return the min of all of them.
+
+
+-------------------CODE-------------------------
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        vector<vector<int>> dp(n, vector<int>(n, INT_MIN)); // matrix has negative values
+
+        int min_path = INT_MAX;
+        for(int i=0; i<n; i++){
+            int path_sum = solve(n-1, i, matrix, dp);
+            min_path = min(path_sum, min_path);
+        }
+        return min_path;
+    }
+
+    int solve(int row, int col, vector<vector<int>>&matrix, vector<vector<int>>&dp){
+        if(col < 0 || col>matrix.size()-1) return 1e9; // invalid path must have enormous sum to make the min function avoid it.
+        if(row == 0) return matrix[row][col];
+        if(dp[row][col]!=INT_MIN) return dp[row][col];
+
+        int up = matrix[row][col] + solve(row-1, col, matrix, dp);
+        int rdiag = matrix[row][col] + solve(row-1, col+1, matrix, dp);
+        int ldiag = matrix[row][col] + solve(row-1, col-1, matrix, dp);
+
+        return dp[row][col] = min(up, min(rdiag, ldiag));
+    }
+};

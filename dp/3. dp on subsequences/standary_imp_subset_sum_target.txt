@@ -1,0 +1,32 @@
+Plan-------------------
+1. If there exists a subset/ subsequence that has a sum of target k;
+2. Recurse using pick and not pick.
+3. Base cases, if we reach target already, if we reach start of array(assuming we go from n to 0), and a dp check if certain target is possible to
+achieve from 0 to idx. dp[idx][target];
+4. Not pick and pick only where arr[i] <= target(to avoid false cases).
+5. Return the or for pick and not pick.
+
+
+
+
+bool f(int idx, int target, vector<int>&arr, vector<vector<int>>&dp){
+    if(target == 0) return true;
+    if(idx == 0) return (arr[idx] == target);
+    if(dp[idx][target]!=-1) return dp[idx][target];
+
+    bool notPick = f(idx-1, target, arr, dp);
+    bool Pick = false;
+
+    if(arr[idx] >= target) Pick = f(idx-1, target-arr[idx], arr, dp);
+
+    return dp[idx][target] = Pick | notPick; ## boolean converts to 0/1 automatically
+}
+
+
+
+bool subsetSum(int target, vector<int>&arr){
+    n = arr.size()
+    vector<vector<int>> dp(n, vector<int>(target+1, -1));
+
+    return f(n-1, target, arr, dp);
+}

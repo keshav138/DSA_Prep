@@ -1,0 +1,43 @@
+Like house robber, you're given an array, where you can take any index, and you have num[index] score, but you must 
+remove the num[idx]+1 and num[idx]-1, and then continue on with that process, leading to which gives you the max, 
+answer.
+
+ok so we operate on every index, if we decide to operate then -1 and +1 are out, then we start 
+considering again from +2 onwards
+
+1. We first create the bucket, of size of the max element in the array, and then update the bucket element, with the sum
+that that index number can provide, like if we have 3 fives, then we update index 5 with 15.
+
+2. We recurse on every index, we either take or not take, if we take we go i+2 index forward, if we skip we go i+1, index forward.
+3. Creating the bucket saves us two headaches, it sorts the values, and allows us to skip the i-1 and i+1 condition easily.
+
+^^ and about the part as to how do we avoid the i-1 condition, if we've got an inx as i , that means we've come from either
+i-2, which was taken, or a i-1 which was skipped, therefore each takes care on its own.
+
+class Solution {
+public:
+
+    int solve(int idx, vector<int>&bucket, vector<int>&memo){
+        if(idx >= bucket.size()) return 0;
+        if(memo[idx]!=-1) return memo[idx];
+
+        int take = bucket[idx] + solve(idx+2, bucket, memo);
+        int notTake = solve(idx+1, bucket, memo);
+
+        return memo[idx] = max(take , notTake);
+    }
+
+    int deleteAndEarn(vector<int>& nums) {
+        int maxVal = -1;
+        for(auto num : nums) maxVal = max(maxVal, num);
+
+        vector<int> bucket(maxVal+1, 0);
+        vector<int>memo(maxVal+1, -1);
+
+        for(auto num: nums){
+            bucket[num] += num;
+        }
+
+        return solve(0, bucket, memo);
+    }
+};

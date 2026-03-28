@@ -1,0 +1,73 @@
+Plan --------------------------
+1. We're given if a matrix containing rotten oranges if given, indicated by 2, every day it spreads its rot in 4 directions, where there are fresh
+oranges,indicated by 1.
+2. Its a multi level inheritance, because there can by more than one rotten orange.
+3. To tackle this we add all the rotten oranges in the queue.
+4. And apply a bit modified bfs.
+5. We iterate till the queue is not empty, we calculate the size of the queue, and take a false rot variable.
+6. We iterate the size of the queue, to only iterate on the oranges on that level (for eg.2)
+7. If we encounter any fresh oranges, we turn the rot varialbe to true and move on.
+8. Outside the queue.size loop(after iterating on one level), we check if there was possible rot, if yes , thats a bfs wave.
+
+---------------------CODE-------------------------------
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> ans = grid;
+        queue<pair<int,int>> q;
+
+        int r = grid.size();
+        int c = grid[0].size();
+
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                if(grid[i][j]==2){
+                    q.push({i,j}); // pushing all rotten oranges to the queue
+                }
+            }
+        }
+
+
+        int dr[] = {0, -1, 0, 1};
+        int dc[] = {-1, 0, 1, 0};
+
+        int days = 0;
+        while(!q.empty()){
+            int size = q.size();
+            bool didWeRot = false;
+
+            for(int i=0; i<size; i++){
+                int row = q.front().first;
+                int col = q.front().second;
+                q.pop();
+
+                for(int i=0; i<4; i++){
+                    int new_row = row + dr[i];
+                    int new_col = col + dc[i];
+
+                    if(new_row >= 0 && new_row < r && new_col >= 0 && new_col < c && ans[new_row][new_col]==1){
+                        ans[new_row][new_col] = 2;
+                        q.push({new_row, new_col});
+                        didWeRot = true;
+                    }
+                }
+
+            }
+            if(didWeRot) days++;
+        }
+
+        int left = 0;
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                if(ans[i][j]==1){
+                    left = -1;
+                    break;
+                }
+            }
+        }
+
+        if(left == -1) return -1;
+
+        return days;
+    }
+};

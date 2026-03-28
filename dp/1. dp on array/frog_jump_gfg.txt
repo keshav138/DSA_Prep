@@ -1,0 +1,29 @@
+same as climbing stairs, just additional cost of jump extra to calculate
+
+-------------CODE------------------------
+class Solution {
+  public:
+    int minCost(vector<int>& height) {
+        // Code here
+        int n = height.size()-1;
+        vector<int> memo(n+1, -1);
+        
+        return solve(height, n, memo);
+    }
+    
+    int solve(vector<int>&height, int n, vector<int>&memo){
+        if(n==0) return 0;
+        if(n<0) return 0;
+        
+        if(memo[n]!=-1) return memo[n];
+        
+        int res = solve(height, n-1, memo) + abs(height[n] - height[n-1]);
+        int right = 0;
+        if(n>1){
+            right = solve(height, n-2, memo) + abs(height[n] - height[n-2]);
+            res = min(res, right);
+        } 
+        
+        return memo[n] = res;
+    }
+};

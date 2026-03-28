@@ -1,0 +1,39 @@
+
+## List method
+
+n -> nodes, m->edges
+
+int main(){
+    int n, m;
+    cin>>n>>m;
+
+    vector<int>adj[n+1];
+    for(int i=0; i<m; i++){
+        int u, v;
+        cin>>u>>v;
+        adj[u].push_back(v);
+        // for a directed graph avoid second push
+        adj[v].push_back(u);
+    } 
+}
+
+
+
+## Adjacency List
+
+
+int main(){
+    int n, m;
+    cin>>n>>m;
+
+    int adj[n+1][m+1];
+
+    vector<int>adj[n+1];
+    for(int i=0; i<m; i++){
+        int u, v;
+        cin>>u>>v;
+        adj[u][v] = 1;  
+        adj[v][u] = 1;  
+    } 
+}
+

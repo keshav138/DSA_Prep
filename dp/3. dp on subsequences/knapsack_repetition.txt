@@ -1,0 +1,30 @@
+Plan-----
+1. Standard knapsack, only differnce one weight can be chosen mutltiple times.
+
+----------CODE------------
+class Solution {
+  public:
+    int knapSack(vector<int>& val, vector<int>& wt, int capacity) {
+        // code here
+        int n = val.size();
+        vector<vector<int>> dp (n, vector<int>(capacity+1, -1));
+        return solve(n-1, val, wt, capacity, dp);
+    }
+    
+    int solve(int idx, vector<int>&val, vector<int>&wt, int cap, vector<vector<int>>&dp){
+        if(idx == 0){ // mind the end case
+            int i = cap / wt[0];
+            return i * val[0];
+        }
+        
+        if(dp[idx][cap]!=-1) return dp[idx][cap];
+        
+        int notTake = 0 + solve(idx-1, val, wt, cap, dp);
+        int take = INT_MIN;
+        if(wt[idx] <= cap){
+            take = val[idx] + solve(idx, val , wt, cap - wt[idx], dp);// notice we dont move index
+        }
+        
+        return dp[idx][cap] = max(take, notTake);
+    }
+};

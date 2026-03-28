@@ -1,0 +1,36 @@
+
+class Solution{
+    public:
+    vector<vector<int>> threeSum(vector<int>&arr){
+        vector<vector<int>> output;
+
+        sort(arr.begin(), arr.end());
+
+        for(int i=0; i<arr.size(); i++){
+            if(i > 0 && arr[i] == arr[i-1]) continue; // to skip duplicates
+
+            int target = -arr[i]; // setting the target
+            int left = i+1;
+            int right = arr.size()-1;
+
+            while(left < right){ // moving pointers inside
+                int sum = arr[left] + arr[right]; // first iteration calculate the sum from both ends
+
+                if(sum == target){ // if target == sum
+                    ouput.push_back({nums[i], nums[left], nums[right]}); // the current combo, is fit to be inserted
+                    while(left < right && nums[left] == nums[left+1]) ++left; // two important rules, to avoid duplicates, if after finding a combo, 
+                    // the numbers are present again on the next iteration, we want to skip them , since they would add duplicates
+                    while(left < rigth && nums[right] == nums[right-1]) -- right;
+                    ++left; // standard function moving inward
+                    --right; // standard function moving inward
+                }
+
+                else if(sum < target) ++left; // if the calculated sum is smaller that the target, we need to increase the sum so ew increment left.
+                else --right;
+
+            }
+       }
+
+       return output;
+    }
+}

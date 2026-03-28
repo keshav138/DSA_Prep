@@ -1,0 +1,113 @@
+Plan---------------
+1. Given a 2d matrix with 0's and 1's, the idea is to find island blocks of 1's surrounded by water on 4 direction / 8 directions.
+2. Again loop the 2d matrix, as soon as you find a 1, and its not visited(make a visited matrix, same size as grid), call the bfs function, it will
+mark all its neighbours visited.
+3. The number of times the bfs function is called, that many number of islands are there.
+
+------------CODE(4 directions)-------------
+class Solution {
+public:
+
+    void bfs(int row, int col, vector<vector<char>>&grid, vector<vector<int>>&visited){
+        visited[row][col] = 1;
+        queue<pair<int,int>> q;
+        q.push({row, col});
+        int mrow = grid.size();
+        int mcol = grid[0].size();
+
+        while(!q.empty()){
+            int row = q.front().first;
+            int col = q.front().second;
+            q.pop();
+
+            int dr[] = {-1, 1, 0, 0};
+            int dc[] = {0, 0, -1, 1};
+
+            for(int i =0; i<4; i++){
+                int nxt_row = row + dr[i];
+                int nxt_col = col + dc[i];
+                if(nxt_row >=0 && nxt_row < mrow && nxt_col >=0 && nxt_col < mcol && grid[nxt_row][nxt_col] == '1' && !visited[nxt_row][nxt_col]){
+                    visited[nxt_row][nxt_col] = 1;
+                    q.push({nxt_row, nxt_col});
+                }
+            }
+        }
+        
+    }
+
+
+    int numIslands(vector<vector<char>>& grid) {
+        int rows = grid.size();
+        int col = grid[0].size();
+
+        vector<vector<int>> visited(rows, vector<int>(col, 0));
+
+        int count = 0;
+
+        for(int i=0; i<rows; i++){
+            for(int j=0; j<col; j++){
+                if( grid[i][j]=='0') continue;
+                if(!visited[i][j]){
+                    count++;
+                    bfs(i, j, grid, visited);
+                }
+            }
+        }
+        return count;
+    }
+};
+
+
+--------------------CODE(8 Directions)------------------------
+
+class Solution {
+public:
+
+    void bfs(int row, int col, vector<vector<char>>&grid, vector<vector<int>>&visited){
+        visited[row][col] = 1;
+        queue<pair<int,int>> q;
+        q.push({row, col});
+        int mrow = grid.size();
+        int mcol = grid[0].size();
+
+        while(!q.empty()){
+            int row = q.front().first;
+            int col = q.front().second;
+            q.pop();
+
+            for(int drow = -1; drow <= 1; drow++){
+                for(int dcol = -1; dcol <= 1; dcol++){
+                    if(drow == 0  && dcol == 0) continue;
+                    int nxt_row = row + drow;
+                    int nxt_col = col + dcol;
+ 
+                    if(nxt_row >=0 && nxt_row < mrow && nxt_col >=0 && nxt_col < mcol && grid[nxt_row][nxt_col] == 'L' && !visited[nxt_row][nxt_col]){
+                        visited[nxt_row][nxt_col] = 1;
+                        q.push({nxt_row, nxt_col});
+                    }
+                }
+            }
+            
+        }
+    }
+
+    int countIslands(vector<vector<char>>& grid) {
+        int rows = grid.size();
+        int col = grid[0].size();
+
+        vector<vector<int>> visited(rows, vector<int>(col, 0));
+
+        int count = 0;
+
+        for(int i=0; i<rows; i++){
+            for(int j=0; j<col; j++){
+                if( grid[i][j]=='W') continue;
+                if(!visited[i][j]){
+                    count++;
+                    bfs(i, j, grid, visited);
+                }
+            }
+        }
+        return count;
+    }
+};

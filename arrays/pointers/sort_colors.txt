@@ -1,0 +1,28 @@
+
+class Solution{
+    public:
+    
+    void sortColor(vector<int>&nums){
+        int left = 0; // my left that marks 0's
+        int right = nums.size()-1; // my rigth that marks 1's
+        int i = 0; // the iterator
+
+        while(i < right){ // standary condition , mind you not left but the iterator
+            if(nums[i]==0){ // if we've found a zero just swap since 0's will be in the front always
+                swap(nums[i], nums[left]);
+                i++;
+                left++;
+            }
+
+            else if(nums[i]==2){ // if we've found a 2, we swap it with the right, we dont do a i++, because the right
+            // could have a zero swapped in
+                swap(nums[i], nums[right]);
+                right--;
+            }
+
+            else{
+                i++;
+            }
+        }
+    }
+}

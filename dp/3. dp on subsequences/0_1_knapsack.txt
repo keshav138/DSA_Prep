@@ -1,0 +1,36 @@
+Plan----------
+1. Its a standard pick and not pick problem , with weight and value and a max weight constraint.
+
+
+----------------CODE----------------
+class Solution {
+  public:
+    
+    int solve(int idx, vector<int> &val, vector<int> &wt, int max_wt, vector<vector<int>>&dp){
+        if(idx == 0){
+            if(wt[idx] <= max_wt) return val[idx];
+            else return 0;
+        }
+        
+        if(dp[idx][max_wt]!=-1) return dp[idx][max_wt];
+        
+        int notTake = 0 + solve(idx-1, val, wt, max_wt, dp);
+        int take = INT_MIN;
+        if(wt[idx] <= max_wt){
+            take = val[idx] + solve(idx-1, val, wt, max_wt-wt[idx], dp);
+        }
+        
+        return dp[idx][max_wt] = max(take, notTake);
+    }
+        
+    int knapsack(int W, vector<int> &val, vector<int> &wt) {
+        // code here
+        auto it = max_element(wt.begin() , wt.end());
+        int wt_max = *it;
+        int n = wt.size();
+
+        vector<vector<int>> dp(n, vector<int>(W+1, -1));
+        
+        return solve(n-1, val, wt, W, dp);
+    }
+};

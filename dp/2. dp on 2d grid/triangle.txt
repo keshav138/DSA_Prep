@@ -1,0 +1,29 @@
+Plan--------------
+1. Its similar to a min path solution, only diffrence is values are present in a triangular fashion.
+2. Moves are limited to immediate down or diagonal, resulting in two calls
+3. Base case in just if we reach the bottom row, just return the respective vector[row][col] value.
+
+** Important thing to note in this question : using -1 to fill the dp array does not work, because the triangle has -ve values which will mess 
+with the memoization. Therefore we use a big -ve value or INT_MIN.
+
+--------------CODE-----------------------
+class Solution {
+public:
+    int solve(int row, int col, vector<vector<int>>&triangle, vector<vector<int>>&dp){
+        if(row == triangle.size()-1) return triangle[row][col];
+
+        if(dp[row][col]!=INT_MIN) return dp[row][col];
+
+        int down = triangle[row][col] + solve(row+1, col, triangle, dp);
+        int diag = triangle[row][col] + solve(row+1, col+1, triangle, dp);
+
+        return dp[row][col] = min(down, diag);
+    }
+
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int n = triangle.size();
+        // we're using INT_MIN instead of -1 becuase there are a lot of -1 in some question so that will mess with the memoization
+        vector<vector<int>> dp(n , vector<int>(n,INT_MIN));
+        return solve(0, 0, triangle, dp);
+    }
+};

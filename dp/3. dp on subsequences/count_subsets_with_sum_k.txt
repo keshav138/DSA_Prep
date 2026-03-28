@@ -1,0 +1,59 @@
+--- Couting is pretty much the same, the places to look out for are teh base case, let the index flow to below 0, then check if target has been
+met or not
+
+Memoizatoin method--------------------
+class Solution {
+  public:
+    int perfectSum(vector<int>& arr, int target) {
+        // code here
+        int n = arr.size();
+        vector<vector<int>>dp(n, vector<int>(target+1, -1));
+        return solve(n-1, arr, target, dp);
+    }
+    
+    int solve(int idx, vector<int>&arr, int target, vector<vector<int>>&dp){
+        if(idx < 0){
+            if(target == 0) return 1;
+            else return 0;
+        }
+        if(dp[idx][target]!=-1) return dp[idx][target];
+        
+        int notTake = solve(idx-1, arr, target, dp);
+        int take = 0;
+        
+        if(arr[idx] <= target) take = solve(idx-1, arr, target-arr[idx], dp);
+        
+        return dp[idx][target] =  notTake + take;
+    }
+};
+
+Tabulatoin methood------------------------------
+
+class Solution {
+  public:
+    int perfectSum(vector<int>& arr, int target) {
+        // code here
+        int n = arr.size();
+        int k = target+1;
+        vector<vector<int>> dp(n, vector<int>(k, 0));
+        
+        for(int i=0; i<n; i++) dp[i][0] = 1; // all indexes can have a sum 0, but not taking anything
+        
+        if(arr[0] == 0) dp[0][0] = 2; // special case when the sum is arr[0] is 0, 
+        //                              we can take it to have a sum 0 or leave it to have a sum 0
+        else if(arr[0]<=target){ // with only the first index, what sum value can i attain.
+            dp[0][arr[0]] = 1;
+        }
+        
+        for(int i=1; i<n;i++){
+            for(int tar=0; tar<=target; tar++){
+                int notPick = dp[i-1][tar];
+                int pick = 0;
+                if(arr[i] <= tar) pick = dp[i-1][tar - arr[i]];
+                dp[i][tar] = pick + notPick;
+            }
+        }
+        
+        return dp[n-1][target];
+    }
+};

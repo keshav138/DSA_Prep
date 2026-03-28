@@ -1,0 +1,42 @@
+Plan---------
+
+1. The longest common subsequence is a variation of the lcs, because of the way palindromes work.
+2. For example, the longest palindromic subsequence of "abcb" is "bcb".
+3. In palindromes, words are the same from both ends, so if we take 'abcb' and reverse it, 'bcba', now between both the longest common subsequence is the palindrome, since it exists in both the strings.
+
+@ basically the same, only send the string and its reverse
+
+---------CODE--------------
+class Solution {
+  public:
+    int longestPalinSubseq(string &s) {
+        // code here
+        string t = s;
+        reverse(t.begin(), t.end());
+        int n = s.length();
+        
+        return solve(s, t, n);
+    }
+    
+    int solve(string &s, string &t, int n){
+        vector<vector<int>> dp(n+1, vector<int>(n+1, 0));
+        
+        for(int i=0; i<=n; i++){
+            dp[i][0] = 0;
+            dp[0][i] = 0;
+        }
+        
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=n; j++){
+                if(s[i-1] == t[j-1]){
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                }
+                else{
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        
+        return dp[n][n];
+    }
+};

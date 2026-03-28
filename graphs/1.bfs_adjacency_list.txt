@@ -1,0 +1,36 @@
+Plan-----
+
+1. Require a adjacecy list, a visited array of size n or n+1, a queue and a vector for tracking the path.
+2. First initialization, set all visited to 0, set the first node to be 1 for visited and push into the queue.
+3. Inside the queue, pop the front, push to path, and push all its adjacents into the queue if not visited.
+
+----------------CODE-----------------
+
+class Solution {
+  public:
+    vector<int> bfs(vector<vector<int>> &adj) {
+        // code here
+        
+        int vis[adj.size()] = {0}; // create a visited array of size n, since its a 0 based graph
+        vis[0] = 1;
+        queue<int> q;
+        q.push(0);
+        
+        vector<int>bfs;
+        
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            bfs.push_back(node);
+            
+            for(auto it: adj[node]){
+                if(!vis[it]){
+                    vis[it] = 1;
+                    q.push(it);
+                }
+            }
+            
+        }
+        return bfs;
+    }
+};

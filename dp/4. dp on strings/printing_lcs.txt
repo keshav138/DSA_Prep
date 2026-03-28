@@ -1,0 +1,81 @@
+Plan----
+1. Continuation of the finding the lcs problem itself, by using the dp matrix, we find the lcs itself.
+2. The idea is, we move from dp[n][m], the lcs index, now here we check our two recursion conditions, we check if the two characters are equal or not. If yes, 
+we backtrack according to our condition, dp[n-1][m-1] and save dp[n][m] to our result string.
+3. If the characters do not match, it could have either been dp[n-1][m] or dp[n][m-1] , therefore their max, and we move to that index, and do our standard checks again. 
+4. The string addition happens only when we can guarentee that the character are same at in index.
+
+@@ Prereq -> Calculate the dp lcs matrix, preferably using tabulation.
+----------CODE---------------CPP
+string findLCS(int n, int m,string &s1, string &s2){
+	// Write your code here.	
+
+	vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+
+	// n-> rows, m->cols
+
+	for(int i=0; i<=m; i++) dp[0][i] = 0;
+	for(int i=0; i<=n; i++) dp[i][0] = 0;
+
+	for(int i=1; i<=n; i++){
+		for(int j=1; j<=m; j++){
+			if(s1[i-1] == s2[j-1]) dp[i][j] = 1 + dp[i-1][j-1];
+			else dp[i][j] = max( dp[i-1][j], dp[i][j-1] );
+		}
+	}
+
+	int len = dp[n][m];
+
+	string s(len, '.');
+
+	int i = n;
+	int j = m;
+	int idx = len-1;
+
+	while(i > 0 && j > 0){
+		if(s1[i-1] == s2[j-1]){
+			s[idx] = s1[i-1];
+			idx--;
+			i--;
+			j--;
+		}
+
+		else if(dp[i-1][j] > dp[i][j-1]){
+			i = i-1;
+		}
+		else{
+			j = j-1;
+		}
+	}
+	// cout<<s<<endl;
+
+	return s;
+
+}
+
+------------CODE---------------------------- the PYTHON CODE
+
+def print_lcs(s1, s2):
+    n, m = len(s1), len(s2)
+    dp = [[0] * (m + 1) for _ in range(n + 1)]
+    
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            if s1[i - 1] == s2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    
+    i, j = n, m
+    lcs = []
+    while i > 0 and j > 0:
+        if s1[i - 1] == s2[j - 1]:
+            lcs.append(s1[i - 1])
+            i -= 1
+            j -= 1
+        elif dp[i - 1][j] > dp[i][j - 1]:
+            i -= 1
+        else:
+            j -= 1
+    
+    return ''.join(reversed(lcs))

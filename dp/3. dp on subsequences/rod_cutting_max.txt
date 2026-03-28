@@ -1,0 +1,40 @@
+Plan-------------
+We're given a rod of n length, and a price array stating what the cost of cutting the rod at each length costs. We're to return return the maximum profit we can make by cutting the rod into smaller pieces and selling them.
+
+Its a simple unbounded knapsack problem,where a certain length can be chosen again and again. We are only given a price array, so our index acts as our length as 
+well , 0 idx is 1 length rod.
+Treat N like a target and price as the value vector.
+
+@@ Mind the base case, since at length 1 or index 0, whatever length we need to provide we can cut that many times, therefore the remaining target * price of 1 legth rod.
+
+----------CODE-------------
+
+// User function Template for C++
+
+class Solution {
+  public:
+    int cutRod(vector<int> &price) {
+        // code here
+        int n = price.size();
+        vector<vector<int>>dp(n, vector<int>(n+1, -1));
+        
+        return solve(n-1, price, n, dp);
+    }
+    
+    int solve(int idx, vector<int>&price, int target, vector<vector<int>>&dp){
+        if(idx==0){
+            return target * price[0]; 
+        }
+        
+        if(dp[idx][target]!=-1) return dp[idx][target];
+        
+        int notTake = solve(idx-1, price, target, dp);
+        
+        int take = INT_MIN;
+        if(idx+1 <= target){
+            take = price[idx] + solve(idx, price, target - (idx+1), dp); // we stay at the same index
+        }
+        
+        return dp[idx][target] = max(take, notTake);
+    }
+};

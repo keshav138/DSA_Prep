@@ -1,0 +1,31 @@
+Tree DFS Traversal:
+
+1. Inorder -> left + top + right
+
+void printInorder(struct Node* node){
+    if(node == nullptr) return;
+
+    printInorder(node->left);
+    print(node->data);
+    printInorder(node->right);
+}
+
+2. PreOrder -> top + left + right
+
+void printPreorder(struct Node* node){
+    if(node == nullptr) return;
+
+    print(node->data);
+    printPreorder(node->left);
+    printPreorder(node->right);
+}
+
+3. PostOrder -> left + right + top
+
+void PostOrder(struct Node* node){
+    if(node==nullptr) return ;
+
+    PostOrder(node->left);
+    PostOrder(node->right);
+    print(node->data);
+}
