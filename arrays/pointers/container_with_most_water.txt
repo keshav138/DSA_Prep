@@ -1,0 +1,24 @@
+Plan---
+Simple, we need to maximize the volume of water in between, so we find the current volume, compare with a glob max, and as for left and right pointer, we need to maximise height as we move inward, we we move the smaller value inside.
+
+CODE----
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int globMax = -1e9;
+        int currMax  = 0;
+
+        int right = height.size()-1;
+        int left = 0;
+
+        while(left < right){
+            currMax = min(height[left], height[right]) * (right - left);
+            globMax = max(globMax, currMax);
+
+            if(height[right] < height[left]) right--;
+            else left++;
+        }
+
+        return globMax;
+    }
+};
