@@ -1,0 +1,31 @@
+Longest Palindromic Subsequence is a special case of lcs, because we're technically asking the longest common subsequence between string s and its reverse.
+Since that's how palindrome's work. A palindrome when reversed must match the original string. Therefore, its just the longest common subsequence between string s and its reverse.
+
+Eg. s = "bbbab" rev = "babbb", the longest common subsequence i.e "bbbb" is the longest common subsequence palindrome.
+
+-- This is the tabulation of lcs basically, mind you, the initial base case of updating all index 0's to 0, i've avoided because the default values are 0's. These 0's represent the -1 index values.
+We here directly start from 1 to n.
+
+** The string matching must always be s[i-1] == r[j-1], the string indexes are shiftd.
+
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        int n = s.length();
+        string r = s;
+        reverse(r.begin(), r.end());
+
+        vector<vector<int>>dp(n+1, vector<int>(n+1, 0));
+        /
+        //avoided the base case 2 for loops
+
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=n; j++){
+                if(s[i-1] == r[j-1]) dp[i][j] = 1 + dp[i-1][j-1];
+                else dp[i][j] = max(dp[i-1][j] , dp[i][j-1]);
+            }
+        }
+
+        return dp[n][n];
+    }
+};

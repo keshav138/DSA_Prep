@@ -1,0 +1,45 @@
+@@ EXPAND AROUND CENTER CONCEPT
+
+So the brute force is the generate all substrings, which is O(n2) and then checking if they're a palindrome is another O(n), so in total it's a O(n3) operation.
+
+Next is the consider it the center approach, its not DP. Its simple iteration.
+For each letter we consider it a center of a palindrome, and along with it a left and right pointer. We move the pointers outside, if match do a ++, if not move to the next center.
+This works for odd length palindromes, since l,r start at the same letter so we get palindromes of size 1, 3, 5, ...
+For even length's we simultaneously consider two letters at a time, so its basically l, r(l+1), and spread out from there.
+
+
+-----CODE FOR SPREAD FROM CENTER---- This has a time complexity of O(n2) and space complexity of O(n)
+Pretty easy just consider each a center and move out comparisons.
+Remember to do it twice for odd and even solutions.
+
+class Solution {
+public:
+    int countSubstrings(string s) {
+        int res = 0;
+
+        int n = s.length();
+
+        for(int i=0; i<n; i++){
+            int left=i, right=i;
+
+            while( left>-1 && right<n && s[left] == s[right]){
+                res++;
+                left--;
+                right++;
+            }
+
+            left = i, right = i+1;
+            
+            while( left>-1 && right<n && s[left] == s[right]){
+                res++;
+                left--;
+                right++;
+            }
+        }
+
+        return res;
+    }
+};
+
+---THE DP INTERVAL METHOD----
+

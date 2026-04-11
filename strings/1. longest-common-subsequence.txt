@@ -1,0 +1,63 @@
+The brute force for this is 2^n, because we have to generate all subsequences.
+
+For dp solution, we take two indexes both starting at the end of either strings.
+Index (2,2) means longest common subsequence between string 1[0-2] and string 2[0-2]
+
+On every index,
+1. Either the letter's match, if they do, we do a +1 and move both indexes down by -1.
+2. If the letters' dont match, we have to consider two cases, one where we do -1 on string 1's index and one where do -1 on string 2's index.
+(because lets say we have ec | ce , c and e dont match, if we move both back, we'll miss the match between c(str1) and c(str2). So we take two cases , where we move index -1 in two cases).
+
+
+--Memoization Solution works, might give some tle sometimes, but is a good intuitive solutions--
+Time Complexity - O(n*m) Space Complexity - O(n*m) (dp storage) + O(n+m) (auxillary stack space)
+class Solution {
+public:
+
+    int lcs(int i, int j, string &s1, string &s2, vector<vector<int>>&dp){
+        if(i<0 || j<0) return 0;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        if(s1[i] == s2[j]) return dp[i][j] =  1 + lcs(i-1, j-1, s1, s2, dp);
+
+        return dp[i][j] = max( lcs(i-1, j, s1, s2, dp), lcs(i, j-1, s1, s2, dp) );
+
+    }
+
+    int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.length();
+        int m = text2.length();
+
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+
+        int ans = lcs(n-1, m-1, text1, text2, dp);
+        return ans;
+    }
+};
+
+--Tabulation is Ideal, similar format is followed forward in similar questions--
+We take -ve values in teh base case, because lets say in, ec | ce,
+1st case -> e | ce, pointer at e(str1) and e(str2) match, and both move -1. So that's where we end.
+
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.size();
+        int m = text2.size();
+
+        vector<vector<int>>dp(n+1, vector<int>(m+1, 0));
+
+        // for(int i=0; i<=n; i++) dp[i][0] = 0;
+        // for(int j=0; j<=m; j++) dp[0][j]  = 0;
+
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=m; j++){
+                if(text1[i-1] == text2[j-1]) dp[i][j] = 1 + dp[i-1][j-1];
+                else dp[i][j] = max(dp[i-1][j] , dp[i][j-1]);
+            }
+        }
+
+        return dp[n][m];
+    }
+};

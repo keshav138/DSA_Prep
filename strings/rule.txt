@@ -1,0 +1,10 @@
+
+Recursion Rule--
+1. Express everything in terms of index.
+2. Explore all possibilities on that index.
+3. Take the best among them.
+
+Tabulation Rule--
+1. Copy the base case.
+2. Write the changing parameters in opposite fashion
+3. Copy the recursion.

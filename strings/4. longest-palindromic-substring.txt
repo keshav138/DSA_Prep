@@ -1,0 +1,43 @@
+@@ EXPAND AROUND CENTER CONCEPT
+
+This is similar to palindromic substring, where we count the number of palindromes
+Only difference is, here when we find a palindrome we calculate the length of the palindrome against a globmax, if larger we update the size of the palidrome and the start position of the palindrome the palindromes total size.
+
+The structure is similar to the palindromic substrings.
+Can be made cleaner by use of a functions
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.length();
+        int globMax = -1e9;
+        int start = 0;
+
+        for(int i=0; i<n; i++){
+
+            //odd
+            int left = i, right = i;
+            while( left > -1 && right < n && s[left]==s[right]){
+                int currLen = right - left + 1;
+                if(currLen > globMax){
+                    globMax = currLen;
+                    start = left;
+                }
+                left--;right++;
+            }
+
+            //even
+            left = i, right = i+1;
+            while( left > -1 && right < n && s[left]==s[right]){
+                int currLen = right - left + 1;
+                if(currLen > globMax){
+                    globMax = currLen;
+                    start = left;
+                }
+                left--;right++;
+            }
+        }
+
+        return s.substr(start, globMax);
+    }
+};
