@@ -1,0 +1,63 @@
+Just use a set/map to keep track, pretty intuitive.
+
+In a sliding window, you should ideally update your result once per iteration, rather than inside every conditional block.
+
+clearner solution--------
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int globMax = 0;
+        int left = 0;
+        int current = 0;
+
+        if(s.size() == 1) return 1; 
+
+
+        unordered_set<int>st;
+        for(int right = 0; right<s.size(); right++){
+            while(st.count(s[right])){
+                st.erase(s[left]);
+                left++;
+            }
+            st.insert(s[right]);
+            globMax = max(globMax, right - left + 1);
+        }
+
+        return globMax;
+    }
+};
+
+myfirst dirtysoln--------------
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int globMax = 0;
+        int left = 0;
+        int current = 0;
+
+        if(s.size() == 1) return 1; 
+
+
+        unordered_set<int>st;
+        for(int right = 0; right<s.size(); right++){
+            if(st.count(s[right])){
+                current = right - left;
+                globMax = max(globMax, current);
+
+                while(st.count(s[right]) == 1){
+                    st.erase(s[left]);
+                    left++;
+                }
+                st.insert(s[right]);
+            }
+            else{
+                st.insert(s[right]);
+                current = right - left + 1;
+                globMax = max(globMax, current);
+            }
+        }
+
+        return globMax;
+    }
+};

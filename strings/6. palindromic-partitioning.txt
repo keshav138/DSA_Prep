@@ -1,0 +1,81 @@
+@@ LONG ASS BUT GOOD EXPLANATION
+Basically we partition at points where by partitioning, the substring on the left is a palindrome, individual elements are palindromes too.
+
+So for eg, we can partition aabb in this way
+1. a | "abb" 
+2. aa | "bb"
+
+this is it, only two partition since any other partition like aab | b does not give us a palindrome on the left(aab).
+
+Further partitions from these states would be,
+1. a | a | "bb"
+2. aa | b | "b"
+
+then
+
+1. a | a | b | "b" -> mind you the last b is still a valid string, not validated yet
+2. aa | b | b | -> we must go one partition beyond the string to consider the last letter.
+
+1. a | a | b | b | 
+
+To decrease computation, we'll use memoization in the isPalindrome function.
+----
+
+Got three functions -
+1. partition -> answer for the final vector with all possible partitions, current for holding partitions for the current call, memo for memoizing the palindromes.
+
+2. partiton
+    1. Base case = if we've reached the final index, push the current partitions into answer and return.
+    2. Loop to see where partitions are possible, if a partition (index - i) is a palindrome, we need to do three things.
+        i. Push the partition into the current vector.
+        ii. Call the function for the remaining string.
+        iii. Pop the partition from the current to bring it back to default, because current is used for all partitions, so each call has its unique current partitions. // this is the only difficult part // just remember every valid partition has a current, so we enter the parititon, call the next call, and pop back the current to get it ready for any other potential partition.
+
+3. isPalindrome
+This can either be a normal palindrome, while loop using functions, that calculates for every call, or a dp functions that saves the outputs.
+DP SOLN
+    - have we already seen this partition, if yes, return the memovalues
+    - is the low == high, or low > high, that means that we have a palindrome, and return 1.
+    - the general call, if letters on both ends are same, we move the pointers inside.
+    - if not, we update the value of memo with 0(not a palindrome)
+    - finally return memo[low]p[high]
+
+
+-----------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> answer;
+        vector<string>current;
+        vector<vector<int>>memo(s.size(), vector<int>(s.size(), -1));
+
+        partition(0, answer, current, s, memo);
+        return answer;
+    }
+
+    void partition(int index, vector<vector<string>>&answer, vector<string>&current, string s, vector<vector<int>>&memo){
+        if(index == s.size()){
+            answer.push_back(current);
+            return;
+        }
+
+        for(int i=index; i<s.size(); i++){
+            if(isPalindrome(index, i, s, memo)){
+                current.push_back(s.substr(index, i - index + 1));
+                partition(i+1, answer, current, s, memo);
+                current.pop_back();
+            }
+        }
+    }
+
+    int isPalindrome(int low, int high, string s, vector<vector<int>>&memo){
+        if(memo[low][high] != -1) return memo[low][high];
+        if(low >= high) return 1;
+
+        if(s[low] == s[high]) memo[low][high] = isPalindrome(low+1, high-1, s, memo);
+        else memo[low][high] = 0;
+
+        return 0;
+    }
+};

@@ -1,0 +1,70 @@
+Looks difficult ngl.
+
+Its technically a sliding window, breaking it down to text makes it easier.
+Take two hash functions, one to track the targets frequencies and other to track the current windows frequencies.
+Update the target frequencies map and take a count of unique entries.
+
+Then start looping, with left and right.
+Whenever we satify the freq count of a character, we increment the match.
+Once match equals the unique count of the original string, we begin our while loop.
+
+Inside we first track the valid window size.
+Then we move the left pointer forward until our window is one match off. Bascasically we off one valid value. Then again iterate until we have a valid
+window with all freq's.
+
+So in total--
+1. Update increment
+2. Check if freq matches.
+3. Check if window valid.
+4. If window valid, record window size.
+5. If window valid, move left pointer forward until window valid.
+
+----CODE-----
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int target[256] = {0};
+        int current[256] = {0};
+        int org_count = 0;
+        int match = 0; //this indicates that all characters have valid frequencies, if its values is off by any n value, it means that n
+        // element's frequency does not qualify yet
+        
+        for(auto ch: t){
+            if(target[ch] == 0) org_count++;
+            target[ch]++;
+        }
+        
+        int right = 0, left = 0;
+        int minLen = INT_MAX;
+        int bestStart = 0;
+        
+        while( right < s.size() ){
+            char ch = s[right];
+            current[ch]++;
+            
+            // if this characters freq matches the target freq
+            if( target[ch] != 0 && target[ch] == current[ch]) match++;
+            
+            // phase; contract left until left window is valid
+            while( match == org_count){
+                // we have a valid window so
+                if(right - left + 1 < minLen){
+                    minLen = right - left + 1 ;
+                    bestStart = left;
+                }
+                
+                char leftChar = s[left];
+                // if we're about to remove a char which is required, the 2nd condition clarifies it
+                if( target[leftChar] != 0 && target[leftChar] == current[leftChar]){
+                    match--; // one characters freq is invalid
+                } 
+                current[leftChar]--;
+                left++;
+            }
+            right++;
+        }
+        
+        return (minLen == INT_MAX) ? "":s.substr(bestStart, minLen);
+ 
+    }
+};
