@@ -1,0 +1,60 @@
+class TrieNode{
+    public:
+    vector<TrieNode*>children;
+    string endword;
+
+    TrieNode(): children(26, nullptr), endword("") {}
+};
+
+
+class Solution {
+public:
+
+    void dfs(int r, int c, vector<string>&res, vector<vector<char>>&board, TrieNode* root){
+        if(r<0 || c<0 || r>board.size()-1 || c>board[0].size()-1) return;
+
+        char ch = board[r][c];
+        if(ch=='#' || !root->children[ch-'a']) return;
+        
+        TrieNode* next = root->children[ch-'a'];
+        if(!next->endword.empty()){
+            res.push_back(next->endword);
+            next->endword = "";
+        }
+        board[r][c] = '#';
+
+        dfs(r+1, c, res, board, next);
+        dfs(r, c+1, res, board, next);
+        dfs(r-1, c, res, board, next);
+        dfs(r, c-1, res, board, next);
+
+        board[r][c] = ch;
+
+    }
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        TrieNode* root = new TrieNode();
+        for(const string& word: words){
+            TrieNode* curr = root;
+            for(const char& ch: word){
+                int idx = ch - 'a';
+                if(!curr->children[idx]){
+                    curr->children[idx]  = new TrieNode();
+                }
+                curr = curr->children[idx];
+            }
+            curr->endword = word;
+        }
+
+        int r = board.size();
+        int c = board[0].size();
+        vector<string> res;
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                dfs(i, j, res, board, root);
+            }
+        }
+
+        return res;
+    }
+};

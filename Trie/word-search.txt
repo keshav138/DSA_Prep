@@ -1,0 +1,46 @@
+class Solution {
+public:
+
+    bool check(int row, int col, vector<vector<char>>&board, string word, int idx, vector<vector<int>>&visited){
+        if(idx == word.size()-1) return true; 
+
+        int r = board.size();
+        int c = board[0].size();
+
+        int dr[] = {0, -1, 0, 1};
+        int dc[] = {-1, 0, 1, 0};
+
+        for(int i=0; i<4; i++){
+            int newrow = row + dr[i];
+            int newcol = col + dc[i];
+
+            if(newrow > -1 && newrow < r && newcol > -1 && newcol < c && !visited[newrow][newcol] && word[idx+1] == board[newrow][newcol]){
+                visited[newrow][newcol] = 1;
+                if(check(newrow, newcol, board, word, idx+1, visited)) return true;
+                visited[newrow][newcol] = 0;
+            }
+        }
+
+        return false;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        bool exist = false;
+        int row = board.size();
+        int col = board[0].size();
+        vector<vector<int>>visited(row, vector<int>(col, 0));
+
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                if(word[0] == board[i][j] && !visited[i][j]){
+                    visited[i][j] = 1;
+                    exist = check(i, j, board, word, 0, visited);
+                    if(exist) return true;
+                    visited[i][j] = 0;
+        
+                }
+            }
+        }
+        return false;
+    }
+};

@@ -1,0 +1,25 @@
+Simple, sort of pre-req for longest repreating character replacement;
+
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int n = nums.size();
+        int maxLen = INT_MIN;
+        
+        int onecount = 0;
+        int left = 0;
+
+        for(int right=0; right<n; right++){
+            if(nums[right]) onecount++;
+
+            while(((right - left + 1) - onecount) > k){
+                if(nums[left]) onecount--;
+                left++;
+            }
+
+            maxLen = max(maxLen, (right - left + 1));
+        }
+        return maxLen;
+    }
+
+};

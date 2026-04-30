@@ -1,0 +1,40 @@
+Longest substring containing the same letter with k allowed change operations.
+Direct Idea is to use a sliding window and a hash map, and keep a track of elements.
+
+A nice is idea is that of expense and income. As long as our :
+
+Expense = WindowSize - Count of most frequent characters, is allowed by our income(k), we can afford it, as soon as it doesn't, we move the left pointer until it isn't.
+
+
+In the loop, we can use a while instead of a if, but the if is optimized, since we only need the max window size only, we have the window be invalid before the next iteration.
+Eg. A valid window of size 4 is our now max, when we add another, now window size 5, violated the condition of cost and expense, therefore we do a left++, again giving a window size of 4, no better than our previous max window, now in the next iterations, the maxFreq element will change or the previous one will become valid again. 
+-----------------------------------------------------------------------------------------------
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int>charmap(26, 0);
+        int maxLen = INT_MIN;
+        int maxFreq = INT_MIN;
+        int n = s.length();
+
+        int left = 0, right = 0;
+
+        for(right = 0; right<n; right++){
+            
+            charmap[s[right]-'A']++;
+            
+            maxFreq = (maxFreq < charmap[s[right]-'A']) ? charmap[s[right]-'A'] : maxFreq;
+
+            
+
+            if((right - left + 1) - maxFreq > k){
+                charmap[s[left]-'A']--;
+                left++;
+            }
+
+            maxLen = max(maxLen, (right - left + 1));
+
+        }
+        return maxLen;
+    }
+};

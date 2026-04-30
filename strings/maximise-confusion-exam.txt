@@ -1,0 +1,30 @@
+Same pre-req to longest repeating character replacement.
+Use while instead of if, if you want to only check valid solutions, if has to check for valid window, then move the pointer again and again, but using while jumps from one valid to next valid iteration.
+
+class Solution {
+public:
+    int maxConsecutiveAnswers(string answerKey, int k) {
+        int n = answerKey.size();
+        int tfreq = 0, ffreq = 0;
+        int maxLen = INT_MIN;
+        int maxFreq = INT_MIN;
+
+        int left = 0, right;
+
+        for(right = 0; right<n; right++){
+            if(answerKey[right] == 'T') tfreq++;
+            else ffreq++;
+
+            maxFreq = max({tfreq, ffreq});
+            if((right - left + 1) - maxFreq > k){
+                if(answerKey[left] == 'T') tfreq--;
+                else ffreq--;
+                left++;
+            }
+
+            maxLen = max(maxLen, (right - left + 1));
+        }
+
+        return maxLen;
+    }
+};
