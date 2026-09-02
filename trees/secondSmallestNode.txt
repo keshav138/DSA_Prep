@@ -1,0 +1,31 @@
+
+We know that the root is the smallest, we simply dfs through the entire tree, and anytime our we find a value greater than our smallest value but lesser than our previously found minimum, we save it. 
+# GOOD Question
+
+
+--------CODE-------------
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def findSecondMinimumValue(self, root: Optional[TreeNode]) -> int:
+        ans = [float('inf')]
+
+        def dfs(node):
+            if node is None:
+                return
+
+            if root.val < node.val < ans[0]:
+                ans[0] = node.val
+
+            dfs(node.left)
+            dfs(node.right)
+
+        dfs(root)
+        return -1 if ans[0] == float('inf') else ans[0]
+        

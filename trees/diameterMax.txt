@@ -1,0 +1,26 @@
+Find the max lenght of the left root line and the right root line for each node, sum them, get the diameter, compare with a glob max,
+return the max of the left or the right line + 1(for curr node) to the upper node.
+
+-----------CODE-------------
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        
+        def fnc(root, maxi):
+            if root == None: return 0
+            left = fnc(root.left, maxi)
+            right = fnc(root.right, maxi)
+
+            maxi[0] = max(maxi[0], left + right)
+            return 1 + max(left, right) 
+
+        maxi = [0]
+
+        output = fnc(root, maxi)
+        return maxi[0]

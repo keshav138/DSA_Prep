@@ -16,6 +16,13 @@ values as the base case, however here we have i<0 and j<0 is equal to 0, we cant
 So we do the same,create a n+1 and m+1 matrix, update all cases where i or j are 0. Then build the loops for the two changing values i and j, both moving from 1 to n(included) & m(included). Same two cases again like memoization, if same , we do the same if not also do the same. Only place where we need to change the indexes is the text comparison part, because the idexes are shifted by 1, so we need to go from 0 to n-1 & m-1; 
 
 @@ also a dp[i][j] indicates how many valid subsequences we can get from t1[0:i] and t2[0:j].
+@@ for tabulation
+
+What dp[0][0] meansWith the +1 shift, the dimensions of our DP table are (n + 1) x (m + 1).
+dp[0][0] means: the LCS of an empty prefix of text1 (length 0) and an empty prefix of text2 (length 0). // original base case, that we start with
+The answer is 0.dp[0][j] means: an empty prefix of text1 compared with the first j characters of text2.
+The answer is 0.dp[i][0] means: the first i characters of text1 compared with an empty prefix of text2. The answer is 0.
+
 
 -----CODE-------------
 
@@ -55,12 +62,13 @@ public:
 
         vector<vector<int>>dp(n+1, vector<int>(m+1, 0));
 
-        for(int i=0;i<=m;i++){ //all 0 row entries is 0
+        for(int i=0;i<=m;i++){ //all 0 row entries is 0, straight down all zeros
             dp[0][i] = 0;
         }
-        for(int i=0; i<=n; i++){ // all 0 column entries is 0
+        for(int i=0; i<=n; i++){ // all 0 column entries is 0, straight right all zeros
             dp[i][0] = 0;
         }
+        // both above steps can be avoided
         
         for(int i=1; i<=n; i++){
             for(int j=1; j<=m; j++){

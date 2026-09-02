@@ -1,6 +1,6 @@
 Plan---------
 
-1. The longest common subsequence is a variation of the lcs, because of the way palindromes work.
+1. The longest common palindromic subsequence is a variation of the lcs, because of the way palindromes work.
 2. For example, the longest palindromic subsequence of "abcb" is "bcb".
 3. In palindromes, words are the same from both ends, so if we take 'abcb' and reverse it, 'bcba', now between both the longest common subsequence is the palindrome, since it exists in both the strings.
 

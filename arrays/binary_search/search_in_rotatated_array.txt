@@ -1,0 +1,28 @@
+Modified version of binary search, assumption is that at any point either the left side or the right side of the array will be sorted.
+So when our mid lands, and its not the target, we check which side is sorted first, if its left, then we check if the target lies between the range of start and mid, similarly for the right side, the same operation.
+
+--------------CODE----------------
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int start = 0, end = nums.size()-1;
+        
+        while(start <= end){
+            int mid = start + (end - start) / 2;
+
+            if(nums[mid] == target) return mid;
+
+            if(nums[mid] >= nums[start]){
+                if(target >= nums[start] && target < nums[mid]){
+                    end = mid - 1;
+                }else start = mid + 1;
+            }
+            else{
+                if(target <= nums[end] && target > nums[mid]){
+                    start = mid+1;
+                }else end = mid - 1;
+            }
+        }
+        return -1;
+    }
+};
