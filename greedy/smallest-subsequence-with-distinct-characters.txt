@@ -1,0 +1,25 @@
+We're given a string with duplicate characters, we need to find the subsequence with distinct characters, however the order must be lexiographically maximum / minimum. Depends on the questions. Order depends on the questions, depending on it we use a increasing / decreasing monotonic stack, and a freq map to keep track.
+
+We add characters in the stack in an increasing order, we pop if the incoming characters breaks order and the characters we're popping appears later, using the freq map.
+
+Also if we've encountered characters we've seen before we skip that iteration.
+--- CODE---------
+
+def solution(self, s):
+    freq = Counter(S)
+    seen = set()
+    stack = []
+    
+
+    for c in s:
+        freq[c] -= 1
+        if c in seen:
+            continue
+
+        while stack and stack[-1] > c and freq[stack[-1]]:
+            seen.remove(stack.pop())
+
+        stack.append(c)
+        seen.add(c)
+
+    return "".join(stack)

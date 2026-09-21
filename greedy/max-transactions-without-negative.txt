@@ -1,0 +1,22 @@
+We're to find the max count of transactoins we can make without the total going negative, we can either add the negative ones or skip them.
+We use a greedy approach, we add every transaction, however we add the negative ones in a min heap, at any point our sum goes negative, we remove the max negative value from the sum, by accessing through the heap.
+
+------CODE---------------
+
+def maximiseTransactions(transaction):
+    curr_sum = 0
+    count = 0
+    negative = []
+
+    for amount in transaction:
+        curr_sum += amount
+        count += 1
+        heapq.heappush(negative, amount)
+
+        if curr_sum < 0:
+           removed =  heapq.heappop(negative)
+           curr_sum -= removed
+           count -= 1
+
+    return count
+            
